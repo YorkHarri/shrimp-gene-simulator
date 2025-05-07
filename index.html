@@ -55,7 +55,7 @@
       document.getElementById("leftSelection").value = leftAct ? leftAct.alt : '';
       document.getElementById("rightSelection").value = rightAct ? rightAct.alt : '';
 
-      fetch("YOUR_GOOGLE_SCRIPT_URL", {
+      fetch("https://script.google.com/macros/s/AKfycbzZCBkqEAliqAgAm5Z0SDhpR6KuCY2YVP53wGXms3LI7IgaRSh2X4k_II0JukrkcRdO/exec", {
         method: "POST",
         body: new FormData(this)
       }).then(response => {
