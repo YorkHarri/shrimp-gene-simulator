@@ -11,8 +11,8 @@ const $$ = selector => document.querySelectorAll(selector);
 
 const imageUrls = {
   spottedMale: "https://i.ibb.co/4gJsp6tk/spotted-Male.png",
-   stripedMale: "https://i.ibb.co/RG9dpJMd/striped-Male.png",
-   plainMale: "https://i.ibb.co/rRhfybGd/plain-Male.png",
+  stripedMale: "https://i.ibb.co/RG9dpJMd/striped-Male.png",
+  plainMale: "https://i.ibb.co/rRhfybGd/plain-Male.png",
   plainFemale: "https://i.ibb.co/Ld3FhjNN/plain-Female.png",
   stripedFemale: "https://i.ibb.co/CKhXgMVv/striped-Female.png",
   spottedFemale: "https://i.ibb.co/3yb1PB7P/spotted-Female.png"

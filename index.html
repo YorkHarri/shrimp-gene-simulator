@@ -2,72 +2,17 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Shrimp Simulator</title>
+  <title>Start Page</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="style.css">
-
-  <!-- Include Hammer.js for swipe gestures -->
-  <script src="https://hammerjs.github.io/dist/hammer.js"></script>
 </head>
 <body>
-
-  <!-- Simulator Content (your existing carousel) -->
-  <div class="carousel-container">
-    <ul class="list left-list">
-      <li class="hide"></li>
-      <li class="prev"></li>
-      <li class="act"></li>
-      <li class="next"></li>
-      <li class="next new-next"></li>
-    </ul>
-
-    <ul class="list right-list">
-      <li class="hide"></li>
-      <li class="prev"></li>
-      <li class="act"></li>
-      <li class="next"></li>
-      <li class="next new-next"></li>
-    </ul>
-  </div>
-
-  <div class="large-image-container">
-    <img src="https://cdn.discordapp.com/attachments/737264849813241887/1338660889728909382/male_shrimp_assets.png" alt="Shrimp egg">
-  </div>
-
-  <div class="swipe"></div>
-
-  <!-- Form to collect simulator choices -->
-  <form id="shrimp-form" style="text-align: center; margin-top: 80vh;">
-    <input type="hidden" name="leftSelection" id="leftSelection">
-    <input type="hidden" name="rightSelection" id="rightSelection">
-    <button type="submit">Submit Choices</button>
-  </form>
-
-  <!-- JS files -->
-  <script src="simulator.js"></script>
-  <script>
-    document.getElementById("shrimp-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-
-      const leftAct = document.querySelector(".left-list .act img");
-      const rightAct = document.querySelector(".right-list .act img");
-
-      document.getElementById("leftSelection").value = leftAct ? leftAct.alt : '';
-      document.getElementById("rightSelection").value = rightAct ? rightAct.alt : '';
-
-      fetch("https://script.google.com/macros/s/AKfycbzZCBkqEAliqAgAm5Z0SDhpR6KuCY2YVP53wGXms3LI7IgaRSh2X4k_II0JukrkcRdO/exec", {
-        method: "POST",
-        body: new FormData(this)
-      }).then(response => {
-        if (response.ok) {
-          alert("Response submitted!");
-          this.reset();
-        } else {
-          alert("Submission failed.");
-        }
-      });
-    });
-  </script>
-
+  <section class="page active">
+    <h1>Welcome to the Shrimp Simulator</h1>
+    <iframe src="https://docs.google.com/forms/d/e/YOUR_START_FORM_ID/viewform?embedded=true" width="640" height="800" frameborder="0" marginheight="0" marginwidth="0">Loading…</iframe>
+    <div style="text-align: center; margin-top: 20px;">
+      <a href="simulator.html"><button>Go to Simulator</button></a>
+    </div>
+  </section>
 </body>
 </html>
