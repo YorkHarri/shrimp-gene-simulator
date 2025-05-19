@@ -202,3 +202,40 @@
     margin-bottom: 12px;
     margin-top: 12px;
   }
+  .egg-batch-grid {
+    display: none;
+    grid-template-columns: repeat(4, 70px);
+    grid-gap: 18px;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .egg-batch-genotype {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 11;
+  bottom: 400px; /* Now sits above the grid */
+  background: rgba(255,255,255,0.95);
+  border-radius: 8px;
+  padding: 6px 18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  margin-bottom: 0;
+  text-align: center;
+}
+
+.egg-batch-grid {
+  position: fixed;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  bottom: 40px; /* Grid stays at the bottom */
+  display: none;
+  grid-template-columns: repeat(4, 70px);
+  grid-gap: 18px;
+  justify-content: center;
+  margin-bottom: 0;
+}
+  .egg-batch-genotype {
+    margin-bottom: 10px;
+    text-align: center;
+  }

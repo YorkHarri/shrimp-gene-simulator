@@ -241,6 +241,9 @@ function createCarousel(list, content) {
 
     // Update all box content
     updateBoxContent();
+
+    // Add this:
+    if (eggBatchGrid.style.display === 'grid') updateEggBatchGrid();
   }
 
   function prev() {
@@ -268,6 +271,8 @@ function createCarousel(list, content) {
 
     // Update all box content
     updateBoxContent();
+
+    if (eggBatchGrid.style.display === 'grid') updateEggBatchGrid();
   }
 
   function slide(element) {
@@ -400,6 +405,81 @@ const mixGenesBtn = document.getElementById('mix-genes-btn');
 if (mixGenesBtn) {
   mixGenesBtn.addEventListener('click', () => {
     updateEgg(); // Just re-mix and update the egg using the current active shrimp
+  });
+}
+
+const bigBatchBtn = document.getElementById('big-batch-btn');
+const eggBatchGrid = document.querySelector('.egg-batch-grid');
+const eggBatchGenotype = document.querySelector('.egg-batch-genotype');
+const eggContainer = document.querySelector('.large-image-container');
+
+function showEggBatchGrid(show) {
+  eggBatchGrid.style.display = show ? 'grid' : 'none';
+  eggBatchGenotype.style.display = show ? 'block' : 'none';
+  eggContainer.style.display = show ? 'none' : 'block';
+}
+
+if (bigBatchBtn && eggBatchGrid && eggBatchGenotype) {
+  bigBatchBtn.addEventListener('click', () => {
+    updateEggBatchGrid();
+  });
+}
+
+// Hide grid and show single egg when "Mix Genes" is clicked
+if (mixGenesBtn) {
+  mixGenesBtn.addEventListener('click', () => {
+    showEggBatchGrid(false);
+    updateEgg();
+  });
+}
+
+// Update egg batch grid display
+function updateEggBatchGrid() {
+  const male = getActiveShrimp("male");
+  const female = getActiveShrimp("female");
+  if (!male || !female) return;
+
+  showEggBatchGrid(true);
+
+  eggBatchGrid.innerHTML = '';
+  eggBatchGenotype.innerHTML = '<span style="color:#888;">Hover over an egg to see its genotype</span>';
+  eggBatchGrid.style.gridTemplateColumns = 'repeat(4, 70px)';
+  eggBatchGrid.style.gridGap = '18px';
+  eggBatchGrid.style.justifyContent = 'center';
+  eggBatchGrid.style.marginTop = '12px';
+
+  const eggs = [];
+  for (let i = 0; i < 16; i++) {
+    const eggGenotype = mixGenes(male, female);
+    const pattern = getPatternPhenotype(eggGenotype.pattern_genotype);
+    const color = getColorFromGenotype(eggGenotype.color_genotype, eggGenotype.saturation_genotype);
+    const eggImg = getEggImage(pattern);
+
+    eggs.push({eggGenotype, pattern, color, eggImg});
+  }
+
+  eggs.forEach((egg, idx) => {
+    const eggDiv = document.createElement('div');
+    eggDiv.style.display = 'flex';
+    eggDiv.style.flexDirection = 'column';
+    eggDiv.style.alignItems = 'center';
+    eggDiv.innerHTML = `
+      <img src="${egg.eggImg}" alt="Egg" style="background:${egg.color};border-radius:10px;width:60px;height:60px;box-shadow:0 1px 4px rgba(0,0,0,0.08); cursor:pointer;">
+    `;
+    eggDiv.addEventListener('mouseenter', () => {
+      eggBatchGenotype.innerHTML = `
+        <div class="info-box" style="display:inline-block;">
+          Pattern: <b>${egg.eggGenotype.pattern_genotype.join('/')}</b> &nbsp;
+          Color: <b>${egg.eggGenotype.color_genotype.join('/')}</b> &nbsp;
+          Saturation: <b>${egg.eggGenotype.saturation_genotype.join('/')}</b> &nbsp;
+          Sex: <b>${egg.eggGenotype.sex_genotype.join('/')}</b>
+        </div>
+      `;
+    });
+    eggDiv.addEventListener('mouseleave', () => {
+      eggBatchGenotype.innerHTML = '<span style="color:#888;">Hover over an egg to see its genotype</span>';
+    });
+    eggBatchGrid.appendChild(eggDiv);
   });
 }
 });
