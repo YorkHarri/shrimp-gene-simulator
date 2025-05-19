@@ -36,31 +36,89 @@ function getPatternPhenotype(genotype) {
   return "unknown";
 }
 
-// 1. Generate shrimp dataset at the start, with random colors
+// Color + saturation genotype to color mapping
+function getColorFromGenotype(genotype, saturationGenotype) {
+  // Color alleles
+  const alleles = genotype.slice().sort().join('');
+  let baseColor;
+  switch (alleles) {
+    case "RR":
+      baseColor = "#9C89B8"; // purple
+      break;
+    case "Rr":
+    case "rR":
+      baseColor = "#F0A6CA"; // pink
+      break;
+    case "rr":
+      baseColor = "#B8BEDD"; // blue
+      break;
+    default:
+      baseColor = "#FFD166"; // fallback (yellow)
+  }
+
+  // Saturation alleles: D = dark (dominant), d = light (recessive)
+  const satAlleles = saturationGenotype.slice().sort().join('');
+  // If at least one D, it's dark; otherwise, light
+  const isDark = satAlleles.includes("D");
+
+  // Combine color and saturation
+  // Example: dark + pink = red, dark + blue = teal, dark + purple = magenta
+  if (isDark) {
+    switch (baseColor) {
+      case "#F0A6CA": // pink
+        return "#EF476F"; // red
+      case "#B8BEDD": // blue
+        return "#118AB2"; // teal
+      case "#9C89B8": // purple
+        return "#FF00FF"; // magenta
+      default:
+        return "#FFD166"; // fallback (yellow stays yellow)
+    }
+  } else {
+    return baseColor;
+  }
+}
+
+// Utility to generate a random allele from a list
+function getRandomAllele(alleles) {
+  return alleles[Math.floor(Math.random() * alleles.length)];
+}
+
+// 1. Generate shrimp dataset at the start, with color and saturation determined randomly
 function generateShrimpDataset() {
+  const colorAlleles = ["R", "r"];
+  const saturationAlleles = ["D", "d"];
+
   const shrimpBase = [
     // MALES
-    { id: 1, sex: "male", label: "Shamus", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"], color_genotype: ["R", "r"], saturation_genotype: ["D", "d"] },
-    { id: 2, sex: "male", label: "Shane", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"], color_genotype: ["R", "R"], saturation_genotype: ["D", "D"] },
-    { id: 3, sex: "male", label: "Shilo", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"], color_genotype: ["r", "r"], saturation_genotype: ["d", "d"] },
-    { id: 4, sex: "male", label: "Shawn", image: imagePaths.plainMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["P", "P"], color_genotype: ["R", "r"], saturation_genotype: ["D", "d"] },
-    { id: 9, sex: "male", label: "Sharky", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"], color_genotype: ["R", "r"], saturation_genotype: ["D", "d"] },
-    { id: 10, sex: "male", label: "Shelton", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"], color_genotype: ["R", "R"], saturation_genotype: ["D", "D"] },
+    { id: 1, sex: "male", label: "Shamus", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
+    { id: 2, sex: "male", label: "Shane", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
+    { id: 3, sex: "male", label: "Shilo", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
+    { id: 4, sex: "male", label: "Shawn", image: imagePaths.plainMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["P", "P"] },
+    { id: 9, sex: "male", label: "Sharky", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
+    { id: 10, sex: "male", label: "Shelton", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
     // FEMALES
-    { id: 5, sex: "female", label: "Shira", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"], color_genotype: ["r", "r"], saturation_genotype: ["d", "d"] },
-    { id: 6, sex: "female", label: "Shandy", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"], color_genotype: ["R", "r"], saturation_genotype: ["D", "d"] },
-    { id: 7, sex: "female", label: "Shayla", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"], color_genotype: ["R", "R"], saturation_genotype: ["D", "D"] },
-    { id: 8, sex: "female", label: "Shelly", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"], color_genotype: ["r", "r"], saturation_genotype: ["d", "d"] },
-    { id: 11, sex: "female", label: "Sherry", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"], color_genotype: ["R", "r"], saturation_genotype: ["D", "d"] },
-    { id: 12, sex: "female", label: "Shannon", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"], color_genotype: ["R", "R"], saturation_genotype: ["D", "D"] }
+    { id: 5, sex: "female", label: "Shira", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
+    { id: 6, sex: "female", label: "Shandy", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
+    { id: 7, sex: "female", label: "Shayla", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] },
+    { id: 8, sex: "female", label: "Shelly", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
+    { id: 11, sex: "female", label: "Sherry", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
+    { id: 12, sex: "female", label: "Shannon", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] }
   ];
 
-  return shrimpBase.map(shrimp => ({
-    ...shrimp,
-    type: getPatternPhenotype(shrimp.pattern_genotype),
-    pattern_phenotype: getPatternPhenotype(shrimp.pattern_genotype),
-    color: getRandomColor()
-  }));
+  return shrimpBase.map(shrimp => {
+    // Randomly generate color and saturation genotypes
+    const color_genotype = [getRandomAllele(colorAlleles), getRandomAllele(colorAlleles)];
+    const saturation_genotype = [getRandomAllele(saturationAlleles), getRandomAllele(saturationAlleles)];
+    return {
+      ...shrimp,
+      color_genotype,
+      saturation_genotype,
+      type: getPatternPhenotype(shrimp.pattern_genotype),
+      pattern_phenotype: getPatternPhenotype(shrimp.pattern_genotype),
+      color: getColorFromGenotype(color_genotype, saturation_genotype)
+    };
+  });
 }
 
 const shrimpDataset = generateShrimpDataset();
