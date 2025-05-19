@@ -40,19 +40,19 @@ function getPatternPhenotype(genotype) {
 function generateShrimpDataset() {
   const shrimpBase = [
     // MALES
-    { id: 1, sex: "male", label: "Shamus", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
-    { id: 2, sex: "male", label: "Shane", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
-    { id: 3, sex: "male", label: "Shilo", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
-    { id: 4, sex: "male", label: "Shawn", image: imagePaths.plainMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["P", "P"] },
-    { id: 9, sex: "male", label: "Sharky", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
-    { id: 10, sex: "male", label: "Shelton", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
+    { id: 1, sex: "male", label: "Shamus", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"], color_genotype: ["R", "r"], saturation_genotype: ["D", "d"] },
+    { id: 2, sex: "male", label: "Shane", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"], color_genotype: ["R", "R"], saturation_genotype: ["D", "D"] },
+    { id: 3, sex: "male", label: "Shilo", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"], color_genotype: ["r", "r"], saturation_genotype: ["d", "d"] },
+    { id: 4, sex: "male", label: "Shawn", image: imagePaths.plainMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["P", "P"], color_genotype: ["R", "r"], saturation_genotype: ["D", "d"] },
+    { id: 9, sex: "male", label: "Sharky", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"], color_genotype: ["R", "r"], saturation_genotype: ["D", "d"] },
+    { id: 10, sex: "male", label: "Shelton", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"], color_genotype: ["R", "R"], saturation_genotype: ["D", "D"] },
     // FEMALES
-    { id: 5, sex: "female", label: "Shira", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
-    { id: 6, sex: "female", label: "Shandy", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
-    { id: 7, sex: "female", label: "Shayla", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] },
-    { id: 8, sex: "female", label: "Shelly", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
-    { id: 11, sex: "female", label: "Sherry", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
-    { id: 12, sex: "female", label: "Shannon", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] }
+    { id: 5, sex: "female", label: "Shira", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"], color_genotype: ["r", "r"], saturation_genotype: ["d", "d"] },
+    { id: 6, sex: "female", label: "Shandy", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"], color_genotype: ["R", "r"], saturation_genotype: ["D", "d"] },
+    { id: 7, sex: "female", label: "Shayla", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"], color_genotype: ["R", "R"], saturation_genotype: ["D", "D"] },
+    { id: 8, sex: "female", label: "Shelly", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"], color_genotype: ["r", "r"], saturation_genotype: ["d", "d"] },
+    { id: 11, sex: "female", label: "Sherry", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"], color_genotype: ["R", "r"], saturation_genotype: ["D", "d"] },
+    { id: 12, sex: "female", label: "Shannon", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"], color_genotype: ["R", "R"], saturation_genotype: ["D", "D"] }
   ];
 
   return shrimpBase.map(shrimp => ({
@@ -101,14 +101,23 @@ function createCarousel(list, content) {
 
     boxes.forEach((box, index) => {
       let boxData = null;
-      if (box.classList.contains('below')) {
-        // Show only the pattern genotype for the active shrimp
+      if (box.classList.contains('info')) {
+        // Show all genotypes for the active shrimp
         if (actContent) {
-          // Find the shrimp in the dataset by label
           const shrimp = shrimpDataset.find(s => actContent.content.includes(s.label));
           if (shrimp) {
-            box.innerHTML = `<div style="font-size:1.2em;font-weight:bold;text-align:center;width:100%;">${shrimp.pattern_genotype.join('/')}</div>`;
-            box.style.backgroundColor = "#fff";
+            box.innerHTML = `
+              <div class="info-box">Pattern: <b>${shrimp.pattern_genotype.join('/')}</b></div>
+              <div class="info-box">Color: <b>${shrimp.color_genotype.join('/')}</b></div>
+              <div class="info-box">Saturation: <b>${shrimp.saturation_genotype.join('/')}</b></div>
+              <div class="info-box">Sex: <b>${shrimp.sex_genotype.join('/')}</b></div>
+            `;
+            box.style.backgroundColor = "transparent";
+            box.style.display = "flex";
+            box.style.flexDirection = "column";
+            box.style.gap = "6px";
+            box.style.alignItems = "center";
+            box.style.justifyContent = "center";
           } else {
             box.innerHTML = "";
             box.style.backgroundColor = "transparent";

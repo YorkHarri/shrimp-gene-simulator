@@ -167,3 +167,30 @@
   transition: transform 1s, opacity 1s;
   display: flex;
   }
+  
+  .list .info {
+    min-height: 90px;
+    height: auto;
+    max-height: none;
+    background: transparent !important;
+    color: #333 !important;
+    border-radius: 8px;
+    opacity: 1;
+    z-index: 0;
+    transform: translateY(170px) scale(0.85);
+    pointer-events: none;
+    transition: transform 1s, opacity 1s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    font-size: 1.1em;
+  }
+  .info-box {
+    background: #fff;
+    border-radius: 6px;
+    padding: 4px 12px;
+    margin: 0 0 2px 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
