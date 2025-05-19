@@ -3,12 +3,6 @@ window.addEventListener("DOMContentLoaded", () => {
 const $ = selector => document.querySelector(selector);
 const $$ = selector => document.querySelectorAll(selector);
 
-
-
-
-
-
-
 const imagePaths = {
   spottedMale: "images/spottedMale.png",
   stripedMale: "images/stripedMale.png",
@@ -18,66 +12,59 @@ const imagePaths = {
   spottedFemale: "images/spottedFemale.png"
 };
 
-// Now you can use these variables in your content arrays
-const leftBoxContent = [
-  { content: `
-      <div class="image-container">
-        <img src="${imagePaths.spottedMale}" alt="Box 1 Image">
-        <div class="text-box">Purpl</div>
-      </div>
-    `, backgroundColor: "#9C89B8" }, // Purple
-  { content: `
-      <div class="image-container">
-        <img src="${imagePaths.spottedMale}" alt="Box 2 Image">
-        <div class="text-box">Ping</div>
-      </div>
-    `, backgroundColor: "#F0A6CA" }, // Pink
-  { content: `
-      <div class="image-container">
-        <img src="${imagePaths.stripedMale}" alt="Box 3 Image">
-        <div class="text-box">Ligh ping</div>
-      </div>
-    `,  backgroundColor: "#FF00FF" }, // Heavy Pink
-  { 
-    content: `
-      <div class="image-container">
-        <img src="${imagePaths.plainMale}" alt="Box 4 Image">
-        <div class="text-box">Blew</div>
-      </div>
-    `, 
-    backgroundColor: "#B8BEDD" // Light Blue
-  },
+// Predefined list of allowed colors
+const allowedColors = [
+  "#9C89B8", // purple
+  "#F0A6CA", // pink
+  "#FF00FF", // magenta
+  "#B8BEDD", // blue
+  "#FFD166", // yellow
+  "#06D6A0", // green
+  "#118AB2", // teal
+  "#EF476F"  // red
 ];
 
-const rightBoxContent = [
-  { content: `
-      <div class="image-container">
-        <img src="${imagePaths.plainFemale}" alt="Box 1 Image">
-        <div class="text-box">Right 1</div>
-      </div>
-    `, backgroundColor: "#FFD166" }, // Yellow
-  { content: `
-      <div class="image-container">
-        <img src="${imagePaths.plainFemale}" alt="Box 2 Image">
-        <div class="text-box">Right 2</div>
-      </div>
-    `, backgroundColor: "#06D6A0" }, // Green
-  { content: `
-      <div class="image-container">
-        <img src="${imagePaths.stripedFemale}" alt="Box 3 Image">
-        <div class="text-box">Right 3</div>
-      </div>
-    `, backgroundColor: "#118AB2" }, // Blue
-  { 
-    content: `
-      <div class="image-container">
-        <img src="${imagePaths.spottedFemale}" alt="Box 4 Image">
-        <div class="text-box">Right 4</div>
-      </div>
-    `, 
-    backgroundColor: "#EF476F" // Red
-  },
-];
+// Utility to pick a random color from the allowed list
+function getRandomColor() {
+  return allowedColors[Math.floor(Math.random() * allowedColors.length)];
+}
+
+// 1. Generate shrimp dataset at the start, with random colors
+function generateShrimpDataset() {
+  return [
+    { id: 1, sex: "male", type: "spotted", label: "Shamus", image: imagePaths.spottedMale },
+    { id: 2, sex: "male", type: "spotted", label: "Shane", image: imagePaths.spottedMale },
+    { id: 3, sex: "male", type: "striped", label: "Shilo", image: imagePaths.stripedMale },
+    { id: 4, sex: "male", type: "plain", label: "Shawn", image: imagePaths.plainMale },
+    { id: 5, sex: "female", type: "plain", label: "Shira", image: imagePaths.plainFemale },
+    { id: 6, sex: "female", type: "plain", label: "Shandy", image: imagePaths.plainFemale },
+    { id: 7, sex: "female", type: "striped", label: "Shayla", image: imagePaths.stripedFemale },
+    { id: 8, sex: "female", type: "spotted", label: "Shelly", image: imagePaths.spottedFemale }
+  ].map(shrimp => ({
+    ...shrimp,
+    color: getRandomColor()
+  }));
+}
+
+const shrimpDataset = generateShrimpDataset();
+
+// 2. Generate box content from dataset
+function createBoxContent(sex) {
+  return shrimpDataset
+    .filter(shrimp => shrimp.sex === sex)
+    .map(shrimp => ({
+      content: `
+        <div class="image-container">
+          <img src="${shrimp.image}" alt="Shrimp">
+          <div class="text-box">${shrimp.label}</div>
+        </div>
+      `,
+      backgroundColor: shrimp.color
+    }));
+}
+
+const leftBoxContent = createBoxContent("male");
+const rightBoxContent = createBoxContent("female");
 
 
 // Carousel logic for each list
