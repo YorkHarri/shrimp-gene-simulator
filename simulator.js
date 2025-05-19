@@ -29,19 +29,30 @@ function getRandomColor() {
   return allowedColors[Math.floor(Math.random() * allowedColors.length)];
 }
 
+function getPatternPhenotype(genotype) {
+  if (genotype.includes("S") && genotype.includes("P")) return "spotted";
+  if (genotype.includes("S")) return "striped";
+  if (genotype.includes("P")) return "plain";
+  return "unknown";
+}
+
 // 1. Generate shrimp dataset at the start, with random colors
 function generateShrimpDataset() {
-  return [
-    { id: 1, sex: "male", type: "spotted", label: "Shamus", image: imagePaths.spottedMale },
-    { id: 2, sex: "male", type: "spotted", label: "Shane", image: imagePaths.spottedMale },
-    { id: 3, sex: "male", type: "striped", label: "Shilo", image: imagePaths.stripedMale },
-    { id: 4, sex: "male", type: "plain", label: "Shawn", image: imagePaths.plainMale },
-    { id: 5, sex: "female", type: "plain", label: "Shira", image: imagePaths.plainFemale },
-    { id: 6, sex: "female", type: "plain", label: "Shandy", image: imagePaths.plainFemale },
-    { id: 7, sex: "female", type: "striped", label: "Shayla", image: imagePaths.stripedFemale },
-    { id: 8, sex: "female", type: "spotted", label: "Shelly", image: imagePaths.spottedFemale }
-  ].map(shrimp => ({
+  const shrimpBase = [
+    { id: 1, sex: "male", label: "Shamus", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
+    { id: 2, sex: "male", label: "Shane", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
+    { id: 3, sex: "male", label: "Shilo", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
+    { id: 4, sex: "male", label: "Shawn", image: imagePaths.plainMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["P", "P"] },
+    { id: 5, sex: "female", label: "Shira", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
+    { id: 6, sex: "female", label: "Shandy", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
+    { id: 7, sex: "female", label: "Shayla", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] },
+    { id: 8, sex: "female", label: "Shelly", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] }
+  ];
+
+  return shrimpBase.map(shrimp => ({
     ...shrimp,
+    type: getPatternPhenotype(shrimp.pattern_genotype),
+    pattern_phenotype: getPatternPhenotype(shrimp.pattern_genotype),
     color: getRandomColor()
   }));
 }
