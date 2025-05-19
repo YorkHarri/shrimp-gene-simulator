@@ -9,39 +9,39 @@ const $$ = selector => document.querySelectorAll(selector);
 
 
 
-const imageUrls = {
-  spottedMale: "https://i.ibb.co/4gJsp6tk/spotted-Male.png",
-  stripedMale: "https://i.ibb.co/RG9dpJMd/striped-Male.png",
-  plainMale: "https://i.ibb.co/rRhfybGd/plain-Male.png",
-  plainFemale: "https://i.ibb.co/Ld3FhjNN/plain-Female.png",
-  stripedFemale: "https://i.ibb.co/CKhXgMVv/striped-Female.png",
-  spottedFemale: "https://i.ibb.co/3yb1PB7P/spotted-Female.png"
+const imagePaths = {
+  spottedMale: "images/spottedMale.png",
+  stripedMale: "images/stripedMale.png",
+  plainMale: "images/plainMale.png",
+  plainFemale: "images/plainFemale.png",
+  stripedFemale: "images/stripedFemale.png",
+  spottedFemale: "images/spottedFemale.png"
 };
 
 // Now you can use these variables in your content arrays
 const leftBoxContent = [
   { content: `
       <div class="image-container">
-        <img src="${imageUrls.spottedMale}" alt="Box 1 Image">
+        <img src="${imagePaths.spottedMale}" alt="Box 1 Image">
         <div class="text-box">Purpl</div>
       </div>
     `, backgroundColor: "#9C89B8" }, // Purple
   { content: `
       <div class="image-container">
-        <img src="${imageUrls.spottedMale}" alt="Box 2 Image">
+        <img src="${imagePaths.spottedMale}" alt="Box 2 Image">
         <div class="text-box">Ping</div>
       </div>
     `, backgroundColor: "#F0A6CA" }, // Pink
   { content: `
       <div class="image-container">
-        <img src="${imageUrls.stripedMale}" alt="Box 3 Image">
+        <img src="${imagePaths.stripedMale}" alt="Box 3 Image">
         <div class="text-box">Ligh ping</div>
       </div>
     `,  backgroundColor: "#FF00FF" }, // Heavy Pink
   { 
     content: `
       <div class="image-container">
-        <img src="${imageUrls.plainMale}" alt="Box 4 Image">
+        <img src="${imagePaths.plainMale}" alt="Box 4 Image">
         <div class="text-box">Blew</div>
       </div>
     `, 
@@ -52,26 +52,26 @@ const leftBoxContent = [
 const rightBoxContent = [
   { content: `
       <div class="image-container">
-        <img src="${imageUrls.plainFemale}" alt="Box 1 Image">
+        <img src="${imagePaths.plainFemale}" alt="Box 1 Image">
         <div class="text-box">Right 1</div>
       </div>
     `, backgroundColor: "#FFD166" }, // Yellow
   { content: `
       <div class="image-container">
-        <img src="${imageUrls.plainFemale}" alt="Box 2 Image">
+        <img src="${imagePaths.plainFemale}" alt="Box 2 Image">
         <div class="text-box">Right 2</div>
       </div>
     `, backgroundColor: "#06D6A0" }, // Green
   { content: `
       <div class="image-container">
-        <img src="${imageUrls.stripedFemale}" alt="Box 3 Image">
+        <img src="${imagePaths.stripedFemale}" alt="Box 3 Image">
         <div class="text-box">Right 3</div>
       </div>
     `, backgroundColor: "#118AB2" }, // Blue
   { 
     content: `
       <div class="image-container">
-        <img src="${imageUrls.spottedFemale}" alt="Box 4 Image">
+        <img src="${imagePaths.spottedFemale}" alt="Box 4 Image">
         <div class="text-box">Right 4</div>
       </div>
     `, 
