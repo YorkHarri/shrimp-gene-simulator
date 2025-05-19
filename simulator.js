@@ -9,7 +9,10 @@ const imagePaths = {
   plainMale: "images/plainMale.png",
   plainFemale: "images/plainFemale.png",
   stripedFemale: "images/stripedFemale.png",
-  spottedFemale: "images/spottedFemale.png"
+  spottedFemale: "images/spottedFemale.png",
+  plainEgg: "images/plainEgg.png",
+  stripedEgg: "images/stripedEgg.png",
+  spottedEgg: "images/spottedEgg.png",
 };
 
 // Predefined list of allowed colors
@@ -204,6 +207,9 @@ function createCarousel(list, content) {
         };
       }
     });
+
+    // Always update the egg after any carousel content change
+    updateEgg();
   }
 
   function next() {
@@ -307,4 +313,92 @@ swipe.on("swiperight", (ev) => {
   }
 });
 
+function getActiveShrimp(sex) {
+  const list = sex === "male" ? $(".left-list") : $(".right-list");
+  const boxes = list.querySelectorAll('li');
+  const actBox = Array.from(boxes).find(box => box.classList.contains('act'));
+  if (!actBox) return null;
+  // Find the shrimp by label in the box's HTML
+  for (const shrimp of shrimpDataset) {
+    if (actBox.innerHTML.includes(shrimp.label)) return shrimp;
+  }
+  return null;
+}
+
+function mixGenes(parent1, parent2) {
+  // Randomly pick one allele from each parent for each gene
+  function pick(alleles1, alleles2) {
+    return [getRandomAllele(alleles1), getRandomAllele(alleles2)];
+  }
+  return {
+    pattern_genotype: pick(parent1.pattern_genotype, parent2.pattern_genotype),
+    color_genotype: pick(parent1.color_genotype, parent2.color_genotype),
+    saturation_genotype: pick(parent1.saturation_genotype, parent2.saturation_genotype),
+    sex_genotype: [getRandomAllele(parent1.sex_genotype), getRandomAllele(parent2.sex_genotype)]
+  };
+}
+
+function getEggImage(pattern) {
+  switch (pattern) {
+    case "spotted": return imagePaths.spottedEgg;
+    case "striped": return imagePaths.stripedEgg;
+    case "plain":   return imagePaths.plainEgg;
+    default:        return imagePaths.plainEgg;
+  }
+}
+
+function updateEgg() {
+  const male = getActiveShrimp("male");
+  const female = getActiveShrimp("female");
+  if (!male || !female) return;
+
+  const eggGenotype = mixGenes(male, female);
+  const pattern = getPatternPhenotype(eggGenotype.pattern_genotype);
+  const color = getColorFromGenotype(eggGenotype.color_genotype, eggGenotype.saturation_genotype);
+  const eggImg = getEggImage(pattern);
+
+  const eggContainer = document.querySelector('.large-image-container');
+  eggContainer.innerHTML = `
+    <img src="${eggImg}" alt="Shrimp egg" style="background:${color};border-radius:10px;">
+    <div style="margin-top:8px;font-size:1em;">
+      Pattern: <b>${eggGenotype.pattern_genotype.join('/')}</b> |
+      Color: <b>${eggGenotype.color_genotype.join('/')}</b> |
+      Saturation: <b>${eggGenotype.saturation_genotype.join('/')}</b> |
+      Sex: <b>${eggGenotype.sex_genotype.join('/')}</b>
+    </div>
+  `;
+}
+
+// Patch carousel creation to update egg after every change
+function patchCarouselUpdate(list, content) {
+  const orig = createCarousel;
+  createCarousel = function(list, content) {
+    const carousel = orig(list, content);
+    // Patch next/prev to update egg
+    if (carousel) {
+      const origNext = carousel.next;
+      const origPrev = carousel.prev;
+      carousel.next = function() { origNext(); updateEgg(); };
+      carousel.prev = function() { origPrev(); updateEgg(); };
+    }
+    return carousel;
+  };
+}
+patchCarouselUpdate();
+
+// Initial egg display
+updateEgg();
+
+// Also update egg when user clicks on a shrimp image
+document.querySelectorAll('.list').forEach(list => {
+  list.addEventListener('click', () => setTimeout(updateEgg, 10));
+});
+
+// "Mix Genes" button event
+const mixGenesBtn = document.getElementById('mix-genes-btn');
+if (mixGenesBtn) {
+  mixGenesBtn.addEventListener('click', () => {
+    updateEgg(); // Just re-mix and update the egg using the current active shrimp
+  });
+}
 });
