@@ -102,18 +102,30 @@ function createCarousel(list, content) {
     boxes.forEach((box, index) => {
       let boxData = null;
       if (box.classList.contains('below')) {
-        // Always copy the .act box's content
-        boxData = actContent;
+        // Show only the pattern genotype for the active shrimp
+        if (actContent) {
+          // Find the shrimp in the dataset by label
+          const shrimp = shrimpDataset.find(s => actContent.content.includes(s.label));
+          if (shrimp) {
+            box.innerHTML = `<div style="font-size:1.2em;font-weight:bold;text-align:center;width:100%;">${shrimp.pattern_genotype.join('/')}</div>`;
+            box.style.backgroundColor = "#fff";
+          } else {
+            box.innerHTML = "";
+            box.style.backgroundColor = "transparent";
+          }
+        } else {
+          box.innerHTML = "";
+          box.style.backgroundColor = "transparent";
+        }
       } else {
         boxData = currentBoxContent[index] || null;
-      }
-
-      if (boxData) {
-        box.innerHTML = boxData.content;
-        box.style.backgroundColor = boxData.backgroundColor;
-      } else {
-        box.innerHTML = "";
-        box.style.backgroundColor = "transparent";
+        if (boxData) {
+          box.innerHTML = boxData.content;
+          box.style.backgroundColor = boxData.backgroundColor;
+        } else {
+          box.innerHTML = "";
+          box.style.backgroundColor = "transparent";
+        }
       }
 
       // Only add click event to non-below boxes
