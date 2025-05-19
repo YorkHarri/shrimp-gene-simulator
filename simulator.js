@@ -357,15 +357,16 @@ function updateEgg() {
   const color = getColorFromGenotype(eggGenotype.color_genotype, eggGenotype.saturation_genotype);
   const eggImg = getEggImage(pattern);
 
+  // Update the egg image and info box together
   const eggContainer = document.querySelector('.large-image-container');
   eggContainer.innerHTML = `
-    <img src="${eggImg}" alt="Shrimp egg" style="background:${color};border-radius:10px;">
-    <div style="margin-top:8px;font-size:1em;">
-      Pattern: <b>${eggGenotype.pattern_genotype.join('/')}</b> |
-      Color: <b>${eggGenotype.color_genotype.join('/')}</b> |
-      Saturation: <b>${eggGenotype.saturation_genotype.join('/')}</b> |
-      Sex: <b>${eggGenotype.sex_genotype.join('/')}</b>
+    <div class="egg-info-container">
+      <div class="info-box">Pattern: <b>${eggGenotype.pattern_genotype.join('/')}</b></div>
+      <div class="info-box">Color: <b>${eggGenotype.color_genotype.join('/')}</b></div>
+      <div class="info-box">Saturation: <b>${eggGenotype.saturation_genotype.join('/')}</b></div>
+      <div class="info-box">Sex: <b>${eggGenotype.sex_genotype.join('/')}</b></div>
     </div>
+    <img src="${eggImg}" alt="Shrimp egg" style="background:${color};border-radius:10px;">
   `;
 }
 
