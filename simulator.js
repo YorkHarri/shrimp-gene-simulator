@@ -39,14 +39,20 @@ function getPatternPhenotype(genotype) {
 // 1. Generate shrimp dataset at the start, with random colors
 function generateShrimpDataset() {
   const shrimpBase = [
+    // MALES
     { id: 1, sex: "male", label: "Shamus", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
     { id: 2, sex: "male", label: "Shane", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
     { id: 3, sex: "male", label: "Shilo", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
     { id: 4, sex: "male", label: "Shawn", image: imagePaths.plainMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["P", "P"] },
+    { id: 9, sex: "male", label: "Sharky", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
+    { id: 10, sex: "male", label: "Shelton", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
+    // FEMALES
     { id: 5, sex: "female", label: "Shira", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
     { id: 6, sex: "female", label: "Shandy", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
     { id: 7, sex: "female", label: "Shayla", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] },
-    { id: 8, sex: "female", label: "Shelly", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] }
+    { id: 8, sex: "female", label: "Shelly", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
+    { id: 11, sex: "female", label: "Sherry", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
+    { id: 12, sex: "female", label: "Shannon", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] }
   ];
 
   return shrimpBase.map(shrimp => ({
@@ -84,20 +90,39 @@ function createCarousel(list, content) {
 
   function updateBoxContent() {
     const boxes = list.querySelectorAll('li');
+    let actBox = Array.from(boxes).find(box => box.classList.contains('act'));
+    let actContent = null;
+
+    // Find the content for the .act box
+    if (actBox) {
+      let actIdx = Array.from(boxes).indexOf(actBox);
+      actContent = currentBoxContent[actIdx] || null;
+    }
+
     boxes.forEach((box, index) => {
-      const boxData = currentBoxContent[index];
-      if (boxData) {
-        box.innerHTML = boxData.content; // Set the content
-        box.style.backgroundColor = boxData.backgroundColor; // Set the background color
+      let boxData = null;
+      if (box.classList.contains('below')) {
+        // Always copy the .act box's content
+        boxData = actContent;
+      } else {
+        boxData = currentBoxContent[index] || null;
       }
 
-      // Add click event listener to images (if any)
+      if (boxData) {
+        box.innerHTML = boxData.content;
+        box.style.backgroundColor = boxData.backgroundColor;
+      } else {
+        box.innerHTML = "";
+        box.style.backgroundColor = "transparent";
+      }
+
+      // Only add click event to non-below boxes
       const img = box.querySelector('img');
-      if (img) {
-        img.addEventListener('click', (event) => {
-          event.stopPropagation(); // Prevent the image click from interfering
-          slide(box); // Trigger the slide function for the parent box
-        });
+      if (img && !box.classList.contains('below')) {
+        img.onclick = (event) => {
+          event.stopPropagation();
+          slide(box);
+        };
       }
     });
   }
