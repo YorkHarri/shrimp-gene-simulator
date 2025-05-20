@@ -17,19 +17,68 @@ const imagePaths = {
 
 // Predefined list of allowed colors
 const allowedColors = [
-  "#9C89B8", // purple
-  "#F0A6CA", // pink
-  "#FF00FF", // magenta
-  "#B8BEDD", // blue
-  "#FFD166", // yellow
-  "#06D6A0", // green
-  "#118AB2", // teal
-  "#EF476F"  // red
+  "#ffb3b3", // light red (pink)
+  "#ff0000", // red
+  "#990000", // dark red
+  "#b3b3ff", // light blue
+  "#0000ff", // blue
+  "#000099", // dark blue
+  "#b3ffb3", // light green
+  "#00ff00", // green
+  "#009900", // dark green
+  "#ffcc99", // light brown (orange)
+  "#a0522d", // brown
+  "#4b2e0f"  // dark brown
 ];
 
-// Utility to pick a random color from the allowed list
-function getRandomColor() {
-  return allowedColors[Math.floor(Math.random() * allowedColors.length)];
+// Color + saturation genotype to color mapping
+function getColorFromGenotype(genotype, saturationGenotype) {
+  // Color alleles: R (red), B (blue), G (green)
+  const alleles = genotype.slice().sort().join('');
+  let baseColor;
+  switch (alleles) {
+    case "BB":
+      baseColor = "blue";
+      break;
+    case "RR":
+      baseColor = "red";
+      break;
+    case "GG":
+      baseColor = "green";
+      break;
+    case "BR":
+    case "RB":
+      baseColor = "brown"; // red + blue = brown
+      break;
+    case "BG":
+    case "GB":
+      baseColor = "blue"; // blue dominant over green
+      break;
+    case "GR":
+    case "RG":
+      baseColor = "red"; // red dominant over green
+      break;
+    default:
+      baseColor = "green"; // fallback
+  }
+
+  // Saturation alleles: L (light), D (dark)
+  // Codominant: LL = light, DD = dark, LD or DL = normal
+  const sat = saturationGenotype.slice().sort().join('');
+  let satLevel;
+  if (sat === "LL") satLevel = "light";
+  else if (sat === "DD") satLevel = "dark";
+  else satLevel = "normal";
+
+  // Map baseColor + satLevel to hex
+  const colorMap = {
+    red:    { light: "#ffb3b3", normal: "#ff0000", dark: "#990000" },
+    blue:   { light: "#b3b3ff", normal: "#0000ff", dark: "#000099" },
+    green:  { light: "#b3ffb3", normal: "#00ff00", dark: "#009900" },
+    brown:  { light: "#ffcc99", normal: "#a0522d", dark: "#4b2e0f" }
+  };
+
+  return colorMap[baseColor]?.[satLevel] || "#cccccc";
 }
 
 function getPatternPhenotype(genotype) {
@@ -39,47 +88,9 @@ function getPatternPhenotype(genotype) {
   return "unknown";
 }
 
-// Color + saturation genotype to color mapping
-function getColorFromGenotype(genotype, saturationGenotype) {
-  // Color alleles
-  const alleles = genotype.slice().sort().join('');
-  let baseColor;
-  switch (alleles) {
-    case "RR":
-      baseColor = "#9C89B8"; // purple
-      break;
-    case "Rr":
-    case "rR":
-      baseColor = "#F0A6CA"; // pink
-      break;
-    case "rr":
-      baseColor = "#B8BEDD"; // blue
-      break;
-    default:
-      baseColor = "#FFD166"; // fallback (yellow)
-  }
-
-  // Saturation alleles: D = dark (dominant), d = light (recessive)
-  const satAlleles = saturationGenotype.slice().sort().join('');
-  // If at least one D, it's dark; otherwise, light
-  const isDark = satAlleles.includes("D");
-
-  // Combine color and saturation
-  // Example: dark + pink = red, dark + blue = teal, dark + purple = magenta
-  if (isDark) {
-    switch (baseColor) {
-      case "#F0A6CA": // pink
-        return "#EF476F"; // red
-      case "#B8BEDD": // blue
-        return "#118AB2"; // teal
-      case "#9C89B8": // purple
-        return "#FF00FF"; // magenta
-      default:
-        return "#FFD166"; // fallback (yellow stays yellow)
-    }
-  } else {
-    return baseColor;
-  }
+// Utility to pick a random color from the allowed list
+function getRandomColor() {
+  return allowedColors[Math.floor(Math.random() * allowedColors.length)];
 }
 
 // Utility to generate a random allele from a list
@@ -89,8 +100,10 @@ function getRandomAllele(alleles) {
 
 // 1. Generate shrimp dataset at the start, with color and saturation determined randomly
 function generateShrimpDataset() {
-  const colorAlleles = ["R", "r"];
-  const saturationAlleles = ["D", "d"];
+  // Use R, B, G for color alleles (red, blue, green)
+  const colorAlleles = ["R", "B", "G"];
+  // Use L, D for saturation alleles (light, dark)
+  const saturationAlleles = ["L", "D"];
 
   const shrimpBase = [
     // MALES
@@ -443,13 +456,13 @@ function updateEggBatchGrid() {
 
   eggBatchGrid.innerHTML = '';
   eggBatchGenotype.innerHTML = '<span style="color:#888;">Hover over an egg to see its genotype</span>';
-  eggBatchGrid.style.gridTemplateColumns = 'repeat(4, 70px)';
+  eggBatchGrid.style.gridTemplateColumns = 'repeat(6, 70px)'; // Changed from 4 to 6
   eggBatchGrid.style.gridGap = '18px';
   eggBatchGrid.style.justifyContent = 'center';
   eggBatchGrid.style.marginTop = '12px';
 
   const eggs = [];
-  for (let i = 0; i < 16; i++) {
+  for (let i = 0; i < 24; i++) {
     const eggGenotype = mixGenes(male, female);
     const pattern = getPatternPhenotype(eggGenotype.pattern_genotype);
     const color = getColorFromGenotype(eggGenotype.color_genotype, eggGenotype.saturation_genotype);
