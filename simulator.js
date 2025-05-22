@@ -34,10 +34,10 @@ window.addEventListener("DOMContentLoaded", () => {
     const sat = saturationGenotype.slice().sort().join('');
     const satLevel = (sat === "ll") ? "light" : "dark";
     const colorMap = {
-      red:    { light: "#ffb3b3", dark: "#990000" },
-      blue:   { light: "#b3b3ff", dark: "#000099" },
-      green:  { light: "#b3ffb3", dark: "#009900" },
-      brown:  { light: "#ffcc99", dark: "#4b2e0f" }
+      red:    { light: "#fe8489", dark: "#aa1d27" },
+      blue:   { light: "#7ca3dc", dark: "#0352ce" },
+      green:  { light: "#98db9c", dark: "#119523" },
+      brown:  { light: "#ac775e", dark: "#5a4232" }
     };
     return colorMap[baseColor]?.[satLevel] || "#000000";
   }
@@ -92,13 +92,13 @@ window.addEventListener("DOMContentLoaded", () => {
         sex_phenotype: "male", 
         sex_genotype: ["X", "Y"], 
         pattern_genotype: ["S", "P"],
-        lethal_alleles: { "1": false, "2": false, "3": true, "4": false, "5": false, "6": false, "7": false, "8": true, "9": false, "10": false }
+        lethal_alleles: { "1": true, "2": true, "3": true, "4": false, "5": false, "6": false, "7": false, "8": false, "9": false, "10": false }
       },
-      //{ id: 2, sex: "male", label: "Shane", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
-      //{ id: 3, sex: "male", label: "Shilo", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
-      //{ id: 4, sex: "male", label: "Shawn", image: imagePaths.plainMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["P", "P"] },
-      //{ id: 9, sex: "male", label: "Sharky", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
-      //{ id: 10, sex: "male", label: "Shelton", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
+      { id: 2, sex: "male", label: "Shane", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
+      { id: 3, sex: "male", label: "Shilo", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
+      { id: 4, sex: "male", label: "Shawn", image: imagePaths.plainMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["P", "P"] },
+      { id: 9, sex: "male", label: "Sharky", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
+      { id: 10, sex: "male", label: "Shelton", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
       // FEMALES
       { id: 5, 
         sex: "female", 
@@ -107,13 +107,13 @@ window.addEventListener("DOMContentLoaded", () => {
         sex_phenotype: "female", 
         sex_genotype: ["X", "X"], 
         pattern_genotype: ["P", "P"], 
-        lethal_alleles: { "1": false, "2": false, "3": true, "4": false, "5": false, "6": false, "7": false, "8": true, "9": false, "10": false }
+        lethal_alleles: { "1": true, "2": true, "3": true, "4": false, "5": false, "6": false, "7": false, "8": false, "9": false, "10": false }
       },
-      //{ id: 6, sex: "female", label: "Shandy", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
-      //{ id: 7, sex: "female", label: "Shayla", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] },
-      //{ id: 8, sex: "female", label: "Shelly", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
-      //{ id: 11, sex: "female", label: "Sherry", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
-      //{ id: 12, sex: "female", label: "Shannon", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] }
+      { id: 6, sex: "female", label: "Shandy", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
+      { id: 7, sex: "female", label: "Shayla", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] },
+      { id: 8, sex: "female", label: "Shelly", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
+      { id: 11, sex: "female", label: "Sherry", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
+      { id: 12, sex: "female", label: "Shannon", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] }
     ];
     return shrimpBase.map(shrimp => {
       const color_genotype = [getRandomAllele(colorAlleles), getRandomAllele(colorAlleles)];
@@ -448,7 +448,8 @@ window.addEventListener("DOMContentLoaded", () => {
             pattern_genotype_named: getNamedGenotype(eggGenotype.pattern_genotype, 'pattern'),
             type: eggDiv.eggPattern,
             pattern_phenotype: eggDiv.eggPattern,
-            color: eggDiv.eggColor
+            color: eggDiv.eggColor,
+            lethal_alleles: eggGenotype.lethal_alleles // <-- add this line
           };
           shrimpDataset.push(newShrimp);
           alert(`Shrimp "${name}" has hatched and was added to the database!`);
@@ -548,14 +549,7 @@ window.addEventListener("DOMContentLoaded", () => {
     // If any allele is true for both chromosomes (i.e., true twice), it's lethal
     // Here, since each egg only has one set, check if any allele is true in both parents
     // But since we store as a single object, check if any value is true for both inherited alleles
-    // Actually, in our model, if any allele is true in both parents and inherited, it's lethal
-    // But since we only store one boolean per allele, let's check if any allele is true in the egg's lethal_alleles
-    // If any allele is true in both parents and inherited, it's lethal
-    // But with our current model, just check if any allele is true (since we only set to true if inherited)
-    // So, let's keep it simple: if any allele is true in the egg, it's lethal
-    // Actually, to match your request: if any allele is true in both parents and inherited, it's lethal
-    // But with our current model, just check if any allele is true in the egg
-    // Let's keep it as: if any allele is true in the egg, it's lethal
+    // Actually, in our model, if any allele is true in the egg, it's lethal
     // But you want: if the egg has two of the same lethal allele (i.e., both inherited as true)
     // So, we need to track both alleles per locus. Let's update mixGenes and this function accordingly
 
