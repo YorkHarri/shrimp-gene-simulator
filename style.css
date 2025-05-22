@@ -278,3 +278,7 @@
     text-overflow: ellipsis;
     white-space: nowrap;
   }
+  .lethal-balloon {
+    z-index: 2;
+    pointer-events: none;
+  }

@@ -141,6 +141,28 @@ window.addEventListener("DOMContentLoaded", () => {
 
   const shrimpDataset = generateShrimpDataset();
 
+  // Track lethal overlay mode
+  let showLethalOverlay = false;
+
+  // Helper to generate lethal balloons HTML
+  function getLethalBalloons(lethal_alleles) {
+    if (!lethal_alleles) return '';
+    const balloons = [];
+    let idx = 0;
+    for (let i = 1; i <= 10; i++) {
+      if (lethal_alleles[String(i)] === true) {
+        // Each balloon gets a rotation to avoid overlap
+        const rotation = -25 + (idx * 18); // e.g. -25, -7, +11, +29, etc.
+        balloons.push(
+          `<img src="images/lethalBalloon${i}.png" class="lethal-balloon" style="position:absolute; top:0; left:0; width:48px; pointer-events:none; transform: rotate(${rotation}deg) translate(${idx*8}px, ${idx*6}px); z-index:2;">`
+        );
+        idx++;
+      }
+    }
+    return balloons.join('');
+  }
+
+  // Update createBoxContent to include lethal balloons if enabled
   function createBoxContent(sex) {
     // Filter shrimp by sex
     let shrimpList = shrimpDataset.filter(shrimp => shrimp.sex === sex);
@@ -156,9 +178,10 @@ window.addEventListener("DOMContentLoaded", () => {
     }
     return shrimpList.map(shrimp => ({
       content: `
-        <div class="image-container">
+        <div class="image-container" style="position:relative;">
           <img src="${shrimp.image}" alt="Shrimp">
           <div class="text-box">${shrimp.label}</div>
+          ${showLethalOverlay ? getLethalBalloons(shrimp.lethal_alleles) : ''}
         </div>
       `,
       backgroundColor: shrimp.color
@@ -326,8 +349,8 @@ window.addEventListener("DOMContentLoaded", () => {
       let allele1 = Math.random() < 0.5 ? motherAllele : false;
       let allele2 = Math.random() < 0.5 ? fatherAllele : false;
       // 10% chance to randomly set to true
-      if (Math.random() < 0.1) allele1 = true;
-      if (Math.random() < 0.1) allele2 = true;
+      if (Math.random() < 0.00) allele1 = true;
+      if (Math.random() < 0.00) allele2 = true;
       lethal_alleles[key] = [allele1, allele2];
     }
     return {
@@ -560,5 +583,28 @@ window.addEventListener("DOMContentLoaded", () => {
       if (lethal_alleles[key][0] && lethal_alleles[key][1]) return true;
     }
     return false;
+  }
+
+  // Add event listener for lethal overlay button
+  const showLethalBtn = document.getElementById('show-lethal-btn');
+  if (showLethalBtn) {
+    showLethalBtn.addEventListener('click', () => {
+      showLethalOverlay = !showLethalOverlay;
+      showLethalBtn.textContent = showLethalOverlay ? "Hide Lethal Genes" : "Show Lethal Genes";
+      // Rebuild carousel content to update overlays
+      const newLeft = createBoxContent("male");
+      leftBoxContent.length = 0;
+      leftBoxContent.push(...newLeft);
+      leftCarouselObj.currentBoxContent.length = 0;
+      leftCarouselObj.currentBoxContent.push(...newLeft);
+      leftCarouselObj.updateBoxContent();
+
+      const newRight = createBoxContent("female");
+      rightBoxContent.length = 0;
+      rightBoxContent.push(...newRight);
+      rightCarouselObj.currentBoxContent.length = 0;
+      rightCarouselObj.currentBoxContent.push(...newRight);
+      rightCarouselObj.updateBoxContent();
+    });
   }
 });
