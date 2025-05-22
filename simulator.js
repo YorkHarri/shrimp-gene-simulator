@@ -71,10 +71,10 @@ window.addEventListener("DOMContentLoaded", () => {
       // MALES
       { id: 1, sex: "male", label: "Shamus", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
       { id: 2, sex: "male", label: "Shane", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
-      //{ id: 3, sex: "male", label: "Shilo", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
-      //{ id: 4, sex: "male", label: "Shawn", image: imagePaths.plainMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["P", "P"] },
-      //{ id: 9, sex: "male", label: "Sharky", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
-      //{ id: 10, sex: "male", label: "Shelton", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
+      { id: 3, sex: "male", label: "Shilo", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
+      { id: 4, sex: "male", label: "Shawn", image: imagePaths.plainMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["P", "P"] },
+      { id: 9, sex: "male", label: "Sharky", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
+      { id: 10, sex: "male", label: "Shelton", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
       // FEMALES
       { id: 5, sex: "female", label: "Shira", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
       //{ id: 6, sex: "female", label: "Shandy", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
@@ -412,6 +412,8 @@ window.addEventListener("DOMContentLoaded", () => {
           rightCarouselObj.currentBoxContent.push(...newContent);
           rightCarouselObj.updateBoxContent();
         }
+        // Update the shrimp grids after hatching a new shrimp
+        renderShrimpGrids();
       });
 
       eggBatchGrid.appendChild(eggDiv);
@@ -444,4 +446,33 @@ window.addEventListener("DOMContentLoaded", () => {
       updateEggBatchGrid();
     });
   }
+
+  function renderShrimpGrids() {
+    const leftGrid = document.querySelector('.shrimp-grid-left');
+    const rightGrid = document.querySelector('.shrimp-grid-right');
+    // Male shrimp
+    leftGrid.innerHTML = shrimpDataset
+      .filter(s => s.sex === "male")
+      .map(s => `
+        <div style="background:${s.color}; border-radius:8px; padding:2px; display:flex; flex-direction:column; align-items:center;">
+          <div style="background:${s.color}; border-radius:6px; width:44px; height:44px; display:flex; align-items:center; justify-content:center;">
+            <img src="${s.image}" alt="${s.label}" style="width:38px; height:38px; border-radius:5px; background:transparent;">
+          </div>
+          <div class="shrimp-grid-label">${s.label}</div>
+        </div>
+      `).join('');
+    // Female shrimp
+    rightGrid.innerHTML = shrimpDataset
+      .filter(s => s.sex === "female")
+      .map(s => `
+        <div style="background:${s.color}; border-radius:8px; padding:2px; display:flex; flex-direction:column; align-items:center;">
+          <div style="background:${s.color}; border-radius:6px; width:44px; height:44px; display:flex; align-items:center; justify-content:center;">
+            <img src="${s.image}" alt="${s.label}" style="width:38px; height:38px; border-radius:5px; background:transparent;">
+          </div>
+          <div class="shrimp-grid-label">${s.label}</div>
+        </div>
+      `).join('');
+  }
+
+  renderShrimpGrids();
 });
