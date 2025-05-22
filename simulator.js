@@ -71,17 +71,17 @@ window.addEventListener("DOMContentLoaded", () => {
       // MALES
       { id: 1, sex: "male", label: "Shamus", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
       { id: 2, sex: "male", label: "Shane", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
-      { id: 3, sex: "male", label: "Shilo", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
-      { id: 4, sex: "male", label: "Shawn", image: imagePaths.plainMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["P", "P"] },
-      { id: 9, sex: "male", label: "Sharky", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
-      { id: 10, sex: "male", label: "Shelton", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
+      //{ id: 3, sex: "male", label: "Shilo", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
+      //{ id: 4, sex: "male", label: "Shawn", image: imagePaths.plainMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["P", "P"] },
+      //{ id: 9, sex: "male", label: "Sharky", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
+      //{ id: 10, sex: "male", label: "Shelton", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
       // FEMALES
       { id: 5, sex: "female", label: "Shira", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
-      { id: 6, sex: "female", label: "Shandy", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
-      { id: 7, sex: "female", label: "Shayla", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] },
-      { id: 8, sex: "female", label: "Shelly", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
-      { id: 11, sex: "female", label: "Sherry", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
-      { id: 12, sex: "female", label: "Shannon", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] }
+      //{ id: 6, sex: "female", label: "Shandy", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
+      //{ id: 7, sex: "female", label: "Shayla", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] },
+      //{ id: 8, sex: "female", label: "Shelly", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
+      //{ id: 11, sex: "female", label: "Sherry", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
+      //{ id: 12, sex: "female", label: "Shannon", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] }
     ];
     return shrimpBase.map(shrimp => {
       const color_genotype = [getRandomAllele(colorAlleles), getRandomAllele(colorAlleles)];
@@ -103,17 +103,27 @@ window.addEventListener("DOMContentLoaded", () => {
   const shrimpDataset = generateShrimpDataset();
 
   function createBoxContent(sex) {
-    return shrimpDataset
-      .filter(shrimp => shrimp.sex === sex)
-      .map(shrimp => ({
-        content: `
-          <div class="image-container">
-            <img src="${shrimp.image}" alt="Shrimp">
-            <div class="text-box">${shrimp.label}</div>
-          </div>
-        `,
-        backgroundColor: shrimp.color
-      }));
+    // Filter shrimp by sex
+    let shrimpList = shrimpDataset.filter(shrimp => shrimp.sex === sex);
+    // Alternate between shrimp if less than 5
+    if (shrimpList.length < 5 && shrimpList.length > 0) {
+      const alternated = [];
+      let i = 0;
+      while (alternated.length < 5) {
+        alternated.push(shrimpList[i % shrimpList.length]);
+        i++;
+      }
+      shrimpList = alternated;
+    }
+    return shrimpList.map(shrimp => ({
+      content: `
+        <div class="image-container">
+          <img src="${shrimp.image}" alt="Shrimp">
+          <div class="text-box">${shrimp.label}</div>
+        </div>
+      `,
+      backgroundColor: shrimp.color
+    }));
   }
 
   const leftBoxContent = createBoxContent("male");
@@ -234,7 +244,7 @@ window.addEventListener("DOMContentLoaded", () => {
     list.addEventListener('click', event => slide(event.target));
 
     // Expose for swipe support
-    return { next, prev };
+    return { next, prev, updateBoxContent, currentBoxContent };
   }
 
   // DOM elements
@@ -243,7 +253,6 @@ window.addEventListener("DOMContentLoaded", () => {
   const eggBatchGrid = document.querySelector('.egg-batch-grid');
   const eggBatchGenotype = document.querySelector('.egg-batch-genotype');
   const eggContainer = document.querySelector('.large-image-container');
-  const mixGenesBtn = document.getElementById('mix-genes-btn');
   const bigBatchBtn = document.getElementById('big-batch-btn');
 
   // Initialize carousels
@@ -332,6 +341,11 @@ window.addEventListener("DOMContentLoaded", () => {
       eggDiv.innerHTML = `
         <img src="${eggImg}" alt="Egg" style="background:${color};border-radius:10px;width:60px;height:60px;box-shadow:0 1px 4px rgba(0,0,0,0.08); cursor:pointer;">
       `;
+      // Store genotype data on the element for later use
+      eggDiv.eggGenotype = eggGenotype;
+      eggDiv.eggPattern = pattern;
+      eggDiv.eggColor = color;
+
       eggDiv.addEventListener('mouseenter', () => {
         eggBatchGenotype.innerHTML = `
           <div class="info-box" style="display:inline-block;">
@@ -340,29 +354,90 @@ window.addEventListener("DOMContentLoaded", () => {
             Saturation: <b>${eggGenotype.saturation_genotype.join('/')}</b> &nbsp;
             Sex: <b>${eggGenotype.sex_genotype.join('/')}</b>
           </div>
+          <div style="margin-top:6px;color:#06D6A0;font-weight:bold;">Click to hatch shrimp</div>
         `;
       });
       eggDiv.addEventListener('mouseleave', () => {
         eggBatchGenotype.innerHTML = '<span style="color:#888;">Hover over an egg to see its genotype</span>';
       });
+
+      // Click to hatch shrimp
+      eggDiv.addEventListener('click', () => {
+        const name = prompt("Name your new shrimp:");
+        if (!name) return;
+        // Add to shrimpDataset
+        const newShrimp = {
+          id: shrimpDataset.length + 1,
+          sex: eggGenotype.sex_genotype.includes("Y") ? "male" : "female",
+          label: name,
+          image: getShrimpImage(eggDiv.eggPattern, eggGenotype.sex_genotype),
+          sex_phenotype: eggGenotype.sex_genotype.includes("Y") ? "male" : "female",
+          sex_genotype: eggGenotype.sex_genotype,
+          pattern_genotype: eggGenotype.pattern_genotype,
+          color_genotype: eggGenotype.color_genotype,
+          saturation_genotype: eggGenotype.saturation_genotype,
+          color_genotype_named: getNamedGenotype(eggGenotype.color_genotype, 'color'),
+          saturation_genotype_named: getNamedGenotype(eggGenotype.saturation_genotype, 'saturation'),
+          pattern_genotype_named: getNamedGenotype(eggGenotype.pattern_genotype, 'pattern'),
+          type: eggDiv.eggPattern,
+          pattern_phenotype: eggDiv.eggPattern,
+          color: eggDiv.eggColor
+        };
+        shrimpDataset.push(newShrimp);
+        alert(`Shrimp "${name}" has hatched and was added to the database!`);
+        // Add to carousel immediately
+        const boxContent = {
+          content: `
+            <div class="image-container">
+              <img src="${newShrimp.image}" alt="Shrimp">
+              <div class="text-box">${newShrimp.label}</div>
+            </div>
+          `,
+          backgroundColor: newShrimp.color
+        };
+        if (newShrimp.sex === "male") {
+          // Rebuild left carousel content with alternation
+          const newContent = createBoxContent("male");
+          leftBoxContent.length = 0;
+          leftBoxContent.push(...newContent);
+          leftCarouselObj.currentBoxContent.length = 0;
+          leftCarouselObj.currentBoxContent.push(...newContent);
+          leftCarouselObj.updateBoxContent();
+        } else {
+          // Rebuild right carousel content with alternation
+          const newContent = createBoxContent("female");
+          rightBoxContent.length = 0;
+          rightBoxContent.push(...newContent);
+          rightCarouselObj.currentBoxContent.length = 0;
+          rightCarouselObj.currentBoxContent.push(...newContent);
+          rightCarouselObj.updateBoxContent();
+        }
+      });
+
       eggBatchGrid.appendChild(eggDiv);
     }
   }
 
+  // Helper to get shrimp image based on pattern and sex genotype
+  function getShrimpImage(pattern, sexGenotype) {
+    const isMale = sexGenotype.includes("Y");
+    switch (pattern) {
+      case "spotted": return isMale ? imagePaths.spottedMale : imagePaths.spottedFemale;
+      case "striped": return isMale ? imagePaths.stripedMale : imagePaths.stripedFemale;
+      case "plain":   return isMale ? imagePaths.plainMale : imagePaths.plainFemale;
+      default:        return isMale ? imagePaths.plainMale : imagePaths.plainFemale;
+    }
+  }
+
   // Initial egg display
-  updateEgg();
+  //updateEgg();
+  updateEggBatchGrid();
+
 
   // Event listeners
   document.querySelectorAll('.list').forEach(list => {
     list.addEventListener('click', () => setTimeout(updateEgg, 10));
   });
-
-  if (mixGenesBtn) {
-    mixGenesBtn.addEventListener('click', () => {
-      showEggBatchGrid(false);
-      updateEgg();
-    });
-  }
 
   if (bigBatchBtn) {
     bigBatchBtn.addEventListener('click', () => {
