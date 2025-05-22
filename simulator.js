@@ -145,22 +145,68 @@ window.addEventListener("DOMContentLoaded", () => {
   let showLethalOverlay = false;
 
   // Helper to generate lethal balloons HTML
-  function getLethalBalloons(lethal_alleles) {
-    if (!lethal_alleles) return '';
-    const balloons = [];
-    let idx = 0;
-    for (let i = 1; i <= 10; i++) {
-      if (lethal_alleles[String(i)] === true) {
-        // Each balloon gets a rotation to avoid overlap
-        const rotation = -25 + (idx * 18); // e.g. -25, -7, +11, +29, etc.
-        balloons.push(
-          `<img src="images/lethalBalloon${i}.png" class="lethal-balloon" style="position:absolute; top:0; left:0; width:48px; pointer-events:none; transform: rotate(${rotation}deg) translate(${idx*8}px, ${idx*6}px); z-index:2;">`
-        );
-        idx++;
+function getLethalBalloons(lethal_alleles, isMale = false) {
+  if (!lethal_alleles) return '';
+  const balloons = [];
+  let idx = 0;
+  const hueShifts = [0, 40, 80, 120, 160, 200, 240, 280, 320, 360];
+  for (let i = 1; i <= 10; i++) {
+    if (lethal_alleles[String(i)] === true) {
+
+      let rotation = -25 + (idx * 30);
+      if (isMale) {
+        rotation = -rotation;
       }
+      const hue = hueShifts[(i - 1) % hueShifts.length];
+      const scaleX = isMale ? 'scaleX(-1)' : '';
+      
+      balloons.push(
+        `<img src="images/lethalBalloon${i}.png" class="lethal-balloon" style="
+          position:absolute;
+          top:0; left:0;
+          width:90px;
+          pointer-events:none;
+          transform-origin: 100% 100%;
+          transform: rotate(${rotation}deg) translate(8px, 20px) ${scaleX};
+          z-index:2;
+          filter: hue-rotate(${hue}deg);
+        ">`
+      );
+      idx++;
     }
-    return balloons.join('');
   }
+  return balloons.join('');
+}
+
+
+// Generate lethal balloons for shrivelled eggs (loci: array of numbers)
+function getShrivelledEggBalloons(loci, isMale = false) {
+  if (!loci || loci.length === 0) return '';
+  const balloons = [];
+  let idx = 0;
+  const hueShifts = [0, 40, 80, 120, 160, 200, 240, 280, 320, 360];
+  for (const i of loci) {
+    let rotation = (idx * 30);
+    if (isMale) rotation = rotation;
+    const hue = hueShifts[(i - 1) % hueShifts.length];
+    const scaleX = isMale ? 'scaleX(1)' : '';
+    balloons.push(
+      `<img src="images/lethalBalloon${i}.png" class="lethal-balloon" style="
+        position:absolute;
+        top:0; left:0;
+        width:30px;
+        pointer-events:none;
+        transform-origin: 100% 100%;
+        transform: rotate(${rotation}deg) translate(4px, 10px) ${scaleX};
+        z-index:2;
+        filter: hue-rotate(${hue}deg);
+      ">`
+    );
+    idx++;
+  }
+  return balloons.join('');
+}
+
 
   // Update createBoxContent to include lethal balloons if enabled
   function createBoxContent(sex) {
@@ -181,7 +227,7 @@ window.addEventListener("DOMContentLoaded", () => {
         <div class="image-container" style="position:relative;">
           <img src="${shrimp.image}" alt="Shrimp">
           <div class="text-box">${shrimp.label}</div>
-          ${showLethalOverlay ? getLethalBalloons(shrimp.lethal_alleles) : ''}
+          ${showLethalOverlay ? getLethalBalloons(shrimp.lethal_alleles, sex === "male") : ''}
         </div>
       `,
       backgroundColor: shrimp.color
@@ -426,9 +472,21 @@ window.addEventListener("DOMContentLoaded", () => {
       eggDiv.style.display = 'flex';
       eggDiv.style.flexDirection = 'column';
       eggDiv.style.alignItems = 'center';
-      eggDiv.innerHTML = `
-        <img src="${eggImg}" alt="Egg" style="background:${color};border-radius:10px;width:60px;height:60px;box-shadow:0 1px 4px rgba(0,0,0,0.08); cursor:pointer;">
-      `;
+
+      // For shrivelled eggs, overlay balloons for lethal loci
+      if (isLethal) {
+        const lethalLoci = getLethalLoci(eggGenotype.lethal_alleles);
+        eggDiv.innerHTML = `
+          <div style="position:relative; width:60px; height:60px;">
+            <img src="${eggImg}" alt="Egg" style="background:${color};border-radius:10px;width:60px;height:60px;box-shadow:0 1px 4px rgba(0,0,0,0.08);">
+            ${getShrivelledEggBalloons(lethalLoci, eggGenotype.sex_genotype.includes("Y"))}
+          </div>
+        `;
+      } else {
+        eggDiv.innerHTML = `
+          <img src="${eggImg}" alt="Egg" style="background:${color};border-radius:10px;width:60px;height:60px;box-shadow:0 1px 4px rgba(0,0,0,0.08); cursor:pointer;">
+        `;
+      }
       eggDiv.eggGenotype = eggGenotype;
       eggDiv.eggPattern = pattern;
       eggDiv.eggColor = color;
@@ -591,20 +649,50 @@ window.addEventListener("DOMContentLoaded", () => {
     showLethalBtn.addEventListener('click', () => {
       showLethalOverlay = !showLethalOverlay;
       showLethalBtn.textContent = showLethalOverlay ? "Hide Lethal Genes" : "Show Lethal Genes";
-      // Rebuild carousel content to update overlays
-      const newLeft = createBoxContent("male");
-      leftBoxContent.length = 0;
-      leftBoxContent.push(...newLeft);
-      leftCarouselObj.currentBoxContent.length = 0;
-      leftCarouselObj.currentBoxContent.push(...newLeft);
-      leftCarouselObj.updateBoxContent();
 
-      const newRight = createBoxContent("female");
-      rightBoxContent.length = 0;
-      rightBoxContent.push(...newRight);
-      rightCarouselObj.currentBoxContent.length = 0;
-      rightCarouselObj.currentBoxContent.push(...newRight);
-      rightCarouselObj.updateBoxContent();
+      // Helper to preserve carousel position
+      function preserveCarouselPosition(carouselObj, boxContent, sex) {
+        // Get the current order of labels in the carousel
+        const currentLabels = carouselObj.currentBoxContent.map(
+          c => {
+            // Extract label from the HTML content
+            const match = c.content.match(/<div class="text-box">([^<]+)<\/div>/);
+            return match ? match[1] : null;
+          }
+        );
+
+        // Rebuild content with new overlay state
+        const newContent = createBoxContent(sex);
+
+        // Build new array in the same order as currentLabels
+        const rotated = currentLabels.map(label =>
+          newContent.find(c => c.content.includes(`>${label}<`))
+          // fallback: if not found, just use the first
+          || newContent[0]
+        );
+
+        // Update boxContent and carouselObj.currentBoxContent in place
+        boxContent.length = 0;
+        boxContent.push(...rotated);
+        carouselObj.currentBoxContent.length = 0;
+        carouselObj.currentBoxContent.push(...rotated);
+        carouselObj.updateBoxContent();
+      }
+
+      preserveCarouselPosition(leftCarouselObj, leftBoxContent, "male");
+      preserveCarouselPosition(rightCarouselObj, rightBoxContent, "female");
     });
+  }
+
+  // Returns an array of loci (as numbers) where both alleles are lethal (true)
+  function getLethalLoci(lethal_alleles) {
+    const loci = [];
+    for (let i = 1; i <= 10; i++) {
+      const key = String(i);
+      if (lethal_alleles[key] && lethal_alleles[key][0] && lethal_alleles[key][1]) {
+        loci.push(i);
+      }
+    }
+    return loci;
   }
 });
