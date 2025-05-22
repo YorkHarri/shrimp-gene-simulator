@@ -33,7 +33,7 @@ const allowedColors = [
 
 // Color + saturation genotype to color mapping
 function getColorFromGenotype(genotype, saturationGenotype) {
-  // Color alleles: R (red), B (blue), G (green)
+  // Color alleles: R (red), B (blue), g (green)
   const alleles = genotype.slice().sort().join('');
   let baseColor;
   switch (alleles) {
@@ -43,32 +43,32 @@ function getColorFromGenotype(genotype, saturationGenotype) {
     case "RR":
       baseColor = "red";
       break;
-    case "GG":
+    case "gg":
       baseColor = "green";
       break;
     case "BR":
     case "RB":
       baseColor = "brown"; // red + blue = brown
       break;
-    case "BG":
-    case "GB":
+    case "Bg":
+    case "gB":
       baseColor = "blue"; // blue dominant over green
       break;
-    case "GR":
-    case "RG":
+    case "gR":
+    case "Rg":
       baseColor = "red"; // red dominant over green
       break;
     default:
       baseColor = "green"; // fallback
   }
 
-  // Saturation alleles: L (light), D (dark)
-  // Codominant: LL = light, DD = dark, LD or DL = normal
+  // Saturation alleles: l (light), D (dark)
+  // Codominant: ll = light, DD = dark, lD or Dl = normal
   const sat = saturationGenotype.slice().sort().join('');
   let satLevel;
-  if (sat === "LL") satLevel = "light";
-  else if (sat === "DD") satLevel = "dark";
-  else satLevel = "normal";
+  if (sat === "ll") satLevel = "light";
+  else satLevel = "dark";
+
 
   // Map baseColor + satLevel to hex
   const colorMap = {
@@ -98,12 +98,23 @@ function getRandomAllele(alleles) {
   return alleles[Math.floor(Math.random() * alleles.length)];
 }
 
+function getNamedGenotype(genotype, type) {
+  const maps = {
+    color: { R: "RED", B: "BLUE", g: "green" },
+    saturation: { l: "light", D: "DARK" },
+    pattern: { S: "STRIPED", P: "PLAIN" }
+  };
+
+  return genotype.map(allele => maps[type][allele] || allele);
+}
+
+
 // 1. Generate shrimp dataset at the start, with color and saturation determined randomly
 function generateShrimpDataset() {
-  // Use R, B, G for color alleles (red, blue, green)
-  const colorAlleles = ["R", "B", "G"];
-  // Use L, D for saturation alleles (light, dark)
-  const saturationAlleles = ["L", "D"];
+  // Use R, B, g for color alleles (red, blue, green)
+  const colorAlleles = ["R", "B", "g"];
+  // Use l, D for saturation alleles (light, dark)
+  const saturationAlleles = ["l", "D"];
 
   const shrimpBase = [
     // MALES
@@ -130,6 +141,9 @@ function generateShrimpDataset() {
       ...shrimp,
       color_genotype,
       saturation_genotype,
+      color_genotype_named: getNamedGenotype(color_genotype, 'color'),
+      saturation_genotype_named: getNamedGenotype(saturation_genotype, 'saturation'),
+      pattern_genotype_named: getNamedGenotype(shrimp.pattern_genotype, 'pattern'),
       type: getPatternPhenotype(shrimp.pattern_genotype),
       pattern_phenotype: getPatternPhenotype(shrimp.pattern_genotype),
       color: getColorFromGenotype(color_genotype, saturation_genotype)
@@ -181,9 +195,9 @@ function createCarousel(list, content) {
           const shrimp = shrimpDataset.find(s => actContent.content.includes(s.label));
           if (shrimp) {
             box.innerHTML = `
-              <div class="info-box">Pattern: <b>${shrimp.pattern_genotype.join('/')}</b></div>
-              <div class="info-box">Color: <b>${shrimp.color_genotype.join('/')}</b></div>
-              <div class="info-box">Saturation: <b>${shrimp.saturation_genotype.join('/')}</b></div>
+              <div class="info-box">Pattern: <br><b>${shrimp.pattern_genotype_named.join(', ')}</b></div>
+              <div class="info-box">Color: <br><b>${shrimp.color_genotype_named.join(', ')}</b></div>
+              <div class="info-box">Saturation: <br><b>${shrimp.saturation_genotype_named.join(', ')}</b></div>
               <div class="info-box">Sex: <b>${shrimp.sex_genotype.join('/')}</b></div>
             `;
             box.style.backgroundColor = "transparent";
