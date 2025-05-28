@@ -286,8 +286,10 @@
     transform: scale(var(--scale, 1));
     transform-origin: top left;
     width: 1050px; /* Set this to your simulator's designed width */
+    height: 900px;  /* Increased height for a taller window */
   }
   body {
     /* Ensure horizontal scroll if scaled wider than viewport */
     overflow-x: auto;
+    overflow-y: auto; /* Allow vertical scrolling if needed */
   }
