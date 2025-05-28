@@ -282,3 +282,12 @@
     z-index: 2;
     pointer-events: none;
   }
+  #scaler {
+    transform: scale(var(--scale, 1));
+    transform-origin: top left;
+    width: 1050px; /* Set this to your simulator's designed width */
+  }
+  body {
+    /* Ensure horizontal scroll if scaled wider than viewport */
+    overflow-x: auto;
+  }

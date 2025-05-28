@@ -8,57 +8,67 @@
   <script src="https://hammerjs.github.io/dist/hammer.js"></script>
 </head>
 <body>
+  <div id="scaler">
+    <!-- Simulator Content -->
+    <div class="carousel-container">
+      <ul class="list left-list">
+        <li class="hide"></li>
+        <li class="prev"></li>
+        <li class="act"></li>
+        <li class="info"></li> <!-- Will be filled with multiple info boxes -->
+        <li class="next"></li>
+        <li class="next new-next"></li>
+      </ul>
 
-  <!-- Simulator Content -->
-  <div class="carousel-container">
-    <ul class="list left-list">
-      <li class="hide"></li>
-      <li class="prev"></li>
-      <li class="act"></li>
-      <li class="info"></li> <!-- Will be filled with multiple info boxes -->
-      <li class="next"></li>
-      <li class="next new-next"></li>
-    </ul>
+      <ul class="list right-list">
+        <li class="hide"></li>
+        <li class="prev"></li>
+        <li class="act"></li>
+        <li class="info"></li> <!-- Will be filled with multiple info boxes -->
+        <li class="next"></li>
+        <li class="next new-next"></li>
+      </ul>
+    </div>
 
-    <ul class="list right-list">
-      <li class="hide"></li>
-      <li class="prev"></li>
-      <li class="act"></li>
-      <li class="info"></li> <!-- Will be filled with multiple info boxes -->
-      <li class="next"></li>
-      <li class="next new-next"></li>
-    </ul>
+    <div class="large-image-container">
+      <div class="egg-info-container"></div>
+      <img src="https://i.ibbbbbb.co/gMTzx7DG/egg-assets.png" alt="Shrimp egg">
+    </div>
+
+    <div style="text-align:center; margin: 24px 0;">
+      <button id="big-batch-btn" style="font-size:1.2em; padding:10px 24px; border-radius:8px; background:#06D6A0; color:#fff; border:none; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.07); margin-left:12px;">
+        Big Batch
+      </button>
+      <button id="show-lethal-btn" style="font-size:1.2em; padding:10px 24px; border-radius:8px; background:#e63946; color:#fff; border:none; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.07); margin-left:12px;">
+        Show Lethal Genes
+      </button>
+    </div>
+    <div class="egg-batch-genotype" style="display:none; text-align:center; margin-bottom:10px;"></div>
+    <div class="egg-batch-grid" style="display:none; justify-content:center; margin-bottom:24px;"></div>
+
+    <div class="swipe"></div>
+
+    <!-- Navigation Buttons -->
+    <div style="text-align: center; margin-top: 80vh;">
+      <a href="index.html"><button>← Back</button></a>
+      <a href="final.html"><button>Next →</button></a>
+    </div>
+
+    <div class="shrimp-grid shrimp-grid-left"></div>
+    <div class="shrimp-grid shrimp-grid-right"></div>
   </div>
-
-  <div class="large-image-container">
-    <div class="egg-info-container"></div>
-    <img src="https://i.ibbbbbb.co/gMTzx7DG/egg-assets.png" alt="Shrimp egg">
-  </div>
-
-  <div style="text-align:center; margin: 24px 0;">
-    <button id="big-batch-btn" style="font-size:1.2em; padding:10px 24px; border-radius:8px; background:#06D6A0; color:#fff; border:none; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.07); margin-left:12px;">
-      Big Batch
-    </button>
-    <button id="show-lethal-btn" style="font-size:1.2em; padding:10px 24px; border-radius:8px; background:#e63946; color:#fff; border:none; cursor:pointer; box-shadow:0 2px 6px rgba(0,0,0,0.07); margin-left:12px;">
-      Show Lethal Genes
-    </button>
-  </div>
-  <div class="egg-batch-genotype" style="display:none; text-align:center; margin-bottom:10px;"></div>
-  <div class="egg-batch-grid" style="display:none; justify-content:center; margin-bottom:24px;"></div>
-
-  <div class="swipe"></div>
-
-  <!-- Navigation Buttons -->
-  <div style="text-align: center; margin-top: 80vh;">
-    <a href="index.html"><button>← Back</button></a>
-    <a href="final.html"><button>Next →</button></a>
-  </div>
-
-  <div class="shrimp-grid shrimp-grid-left"></div>
-  <div class="shrimp-grid shrimp-grid-right"></div>
 
   <!-- JS files -->
   <script src="simulator.js"></script>
-
+  <script>
+  function setScale() {
+    // Set this to your simulator's designed width
+    const baseWidth = 1050;
+    const scale = Math.min(window.innerWidth / baseWidth, 1);
+    document.documentElement.style.setProperty('--scale', scale);
+  }
+  window.addEventListener('resize', setScale);
+  setScale();
+  </script>
 </body>
 </html>
