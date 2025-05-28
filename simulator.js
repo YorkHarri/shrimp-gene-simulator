@@ -648,7 +648,7 @@ function getShrivelledEggBalloons(loci, isMale = false) {
   if (showLethalBtn) {
     showLethalBtn.addEventListener('click', () => {
       showLethalOverlay = !showLethalOverlay;
-      showLethalBtn.textContent = showLethalOverlay ? "Hide Lethal Genes" : "Show Lethal Genes";
+      showLethalBtn.textContent = showLethalOverlay ? "Show Recessive Lethal Alleles" : "Show Recessive Lethal Alleles";
 
       // Helper to preserve carousel position
       function preserveCarouselPosition(carouselObj, boxContent, sex) {
