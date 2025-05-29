@@ -46,16 +46,45 @@
     <div class="egg-batch-genotype" style="display:none; text-align:center; margin-bottom:10px;"></div>
     <div class="egg-batch-grid" style="display:none; justify-content:center; margin-bottom:24px;"></div>
 
+    <!-- Add this box above the preset buttons -->
+    <div style="text-align:center; margin-top:825px; margin-bottom:8px;">
+      <div style="display:inline-block; background:#fff; color:#333; border-radius:8px; padding:10px 24px; font-size:1.1em; box-shadow:0 2px 6px rgba(0,0,0,0.07);">
+        ↓preset buttons below↓
+      </div>
+    </div>
+
+    <div style="text-align:center; margin-top:10px;">
+      <button id="preset-1-btn" style="font-size:1em; padding:8px 20px; border-radius:8px; background:#457b9d; color:#fff; border:none; cursor:pointer;">
+        Unique recessive genes
+      </button>
+
+      <button id="preset-2-btn" style="font-size:1em; padding:8px 20px; border-radius:8px; background:#457b9d; color:#fff; border:none; cursor:pointer;">
+        Shared recessive genes
+      </button>
+
+      <button id="preset-3-btn" style="font-size:1em; padding:8px 20px; border-radius:8px; background:#457b9d; color:#fff; border:none; cursor:pointer;">
+        Unique lethal genes
+      </button>
+
+      <button id="preset-4-btn" style="font-size:1em; padding:8px 20px; border-radius:8px; background:#457b9d; color:#fff; border:none; cursor:pointer;">
+        Shared lethal genes
+      </button>
+    </div>
+
+    <!-- Box below the preset buttons for dynamic text -->
+    <div id="preset-info-box" style="text-align:center; margin-top:16px; margin-bottom:16px;">
+      <div style="display:inline-block; background:#fff; color:#333; border-radius:8px; padding:10px 24px; font-size:1.05em; box-shadow:0 2px 6px rgba(0,0,0,0.07); min-width:220px;">
+        <!-- This text will change based on preset button clicks -->
+      </div>
+    </div>
+
     <div class="swipe"></div>
 
-    <!-- Navigation Buttons -->
-    <div style="text-align: center; margin-top: 80vh;">
-      <a href="index.html"><button>← Back</button></a>
-      <a href="final.html"><button>Next →</button></a>
-    </div>
 
     <div class="shrimp-grid shrimp-grid-left"></div>
     <div class="shrimp-grid shrimp-grid-right"></div>
+
+
   </div>
 
   <!-- JS files -->

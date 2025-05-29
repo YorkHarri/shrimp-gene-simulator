@@ -626,6 +626,27 @@ function getShrivelledEggBalloons(loci, isMale = false) {
 
   renderShrimpGrids();
 
+  // Preset info text for each button
+  const presetInfoTexts = {
+    "preset-1-btn": "This preset loads unique recessive genes for each shrimp.<br>This is the default preset.<br><br>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.",
+    "preset-2-btn": "This preset loads shared recessive genes between shrimp.<br><br>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.",
+    "preset-3-btn": "This preset loads unique lethal genes for each shrimp.<br><br>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos.",
+    "preset-4-btn": "This preset loads shared lethal genes between shrimp.<br><br>Lorem ipsum dolor sit amet consectetur adipiscing elit. Quisque faucibus ex sapien vitae pellentesque sem placerat. In id cursus mi pretium tellus duis convallis. Tempus leo eu aenean sed diam urna tempor. Pulvinar vivamus fringilla lacus nec metus bibendum egestas. Iaculis massa nisl malesuada lacinia integer nunc posuere. Ut hendrerit semper vel class aptent taciti sociosqu. Ad litora torquent per conubia nostra inceptos himenaeos."
+  };
+
+  // Add event listeners to preset buttons to update the info box
+  Object.keys(presetInfoTexts).forEach(btnId => {
+    const btn = document.getElementById(btnId);
+    if (btn) {
+      btn.addEventListener('click', () => {
+        const infoBox = document.getElementById('preset-info-box');
+        if (infoBox) {
+          infoBox.querySelector('div').innerHTML = presetInfoTexts[btnId]; // Use innerHTML for <br>
+        }
+      });
+    }
+  });
+
   function isLethalEgg(lethal_alleles) {
     // If any allele is true for both chromosomes (i.e., true twice), it's lethal
     // Here, since each egg only has one set, check if any allele is true in both parents
