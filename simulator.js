@@ -93,7 +93,7 @@ window.addEventListener("DOMContentLoaded", () => {
       pattern_genotype: ["S", "P"],
       color_genotype: ["R", "g"],
       saturation_genotype: ["D", "D"],
-      // lethal_alleles: { "1": true, "2": true, "3": true, "4": false, "5": false, "6": false, "7": false, "8": false, "9": false, "10": false }
+      lethal_alleles: { "1": true, "2": true, "3": true, "4": false, "5": false, "6": false, "7": false, "8": false, "9": false, "10": false }
     },
     { 
       id: 2,
@@ -101,7 +101,9 @@ window.addEventListener("DOMContentLoaded", () => {
       label: "Shane",
       sex_phenotype: "male",
       sex_genotype: ["X", "Y"],
-      pattern_genotype: ["S", "S"]
+      pattern_genotype: ["S", "S"],
+      color_genotype: ["R", "g"],
+      saturation_genotype: ["D", "l"]
     },
     { 
       id: 3,
@@ -125,7 +127,8 @@ window.addEventListener("DOMContentLoaded", () => {
       label: "Sharky",
       sex_phenotype: "male",
       sex_genotype: ["X", "Y"],
-      pattern_genotype: ["S", "P"]
+      pattern_genotype: ["S", "P"],
+      lethal_alleles: { "1": true, "2": false, "3": true, "4": false, "5": true, "6": false, "7": false, "8": false, "9": false, "10": false }
     },
     { 
       id: 6,
@@ -137,7 +140,7 @@ window.addEventListener("DOMContentLoaded", () => {
     },
     // FEMALES
     { 
-      id: 11, 
+      id: 11, //hidden recessive light
       sex: "female", 
       label: "Shira", 
       sex_phenotype: "female", 
@@ -148,12 +151,15 @@ window.addEventListener("DOMContentLoaded", () => {
       lethal_alleles: { "0": false, "2": false, "3": false, "4": false, "5": false, "6": false, "7": false, "8": true, "9": true, "10": true }
     },
     { 
-      id: 12, 
-      sex: "female", 
-      label: "Shandy", 
-      sex_phenotype: "female", 
-      sex_genotype: ["X", "X"], 
-      pattern_genotype: ["P", "P"]
+      id: 12,
+      sex: "female",
+      label: "Shandy",
+      sex_phenotype: "female",
+      sex_genotype: ["X", "X"],
+      pattern_genotype: ["P", "P"],
+      color_genotype: ["R", "g"],
+      saturation_genotype: ["D", "l"],
+      lethal_alleles: { "1": true, "2": false, "3": true, "4": false, "5": true, "6": false, "7": false, "8": false, "9": false, "10": false }
     },
     { 
       id: 13, 
@@ -161,7 +167,8 @@ window.addEventListener("DOMContentLoaded", () => {
       label: "Shayla", 
       sex_phenotype: "female", 
       sex_genotype: ["X", "X"], 
-      pattern_genotype: ["S", "S"]
+      pattern_genotype: ["S", "S"],
+      lethal_alleles: { "1": false, "2": true, "3": false, "4": true, "5": true, "6": false, "7": false, "8": false, "9": false, "10": false }
     },
     { 
       id: 14, 
@@ -189,8 +196,12 @@ window.addEventListener("DOMContentLoaded", () => {
     }
   ];
     return shrimpBase.map(shrimp => {
-      const color_genotype = [getRandomAllele(colorAlleles), getRandomAllele(colorAlleles)];
-      const saturation_genotype = [getRandomAllele(saturationAlleles), getRandomAllele(saturationAlleles)];
+      const color_genotype = shrimp.color_genotype 
+        ? [...shrimp.color_genotype] 
+        : [getRandomAllele(colorAlleles), getRandomAllele(colorAlleles)];
+      const saturation_genotype = shrimp.saturation_genotype 
+        ? [...shrimp.saturation_genotype] 
+        : [getRandomAllele(saturationAlleles), getRandomAllele(saturationAlleles)];
       const lethal_alleles = shrimp.lethal_alleles 
         ? { ...shrimp.lethal_alleles } 
         : generateLethalAlleles();
@@ -726,9 +737,86 @@ function getShrivelledEggBalloons(loci, isMale = false) {
     }
   });
 
+  // Helper to spin carousel to a shrimp with a given label
+function spinCarouselToLabel(carouselObj, boxContent, label) {
+  // The "act" box is always at index 2 (for 5 boxes)
+  const ACT_IDX = 2;
+  const boxes = carouselObj.currentBoxContent;
+  const targetIdx = boxes.findIndex(c => c.content.includes(`>${label}<`));
+  if (targetIdx === -1) return; // Not found
+
+  // Calculate how many next() calls to bring targetIdx to ACT_IDX
+  const total = boxes.length;
+  let spins = (targetIdx - ACT_IDX + total) % total;
+
+  function spinStep() {
+    if (spins > 0) {
+      carouselObj.next();
+      spins--;
+      setTimeout(spinStep, 200);
+    }
+  }
+  spinStep();
+}
+
+// After presetInfoTexts and event listeners for preset buttons
+const preset1Btn = document.getElementById('preset-1-btn');
+if (preset1Btn) {
+  preset1Btn.addEventListener('click', () => {
+    // Spin left carousel to Shamus
+    spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shelton"); //not actually what I wanted, but by going one to the left, the one in the middle is Shamus
+    // Spin right carousel to Shira
+    spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shannon");
+  });
+}
+
+const preset2Btn = document.getElementById('preset-2-btn');
+if (preset2Btn) {
+  preset2Btn.addEventListener('click', () => {
+    // Spin left carousel to Shane
+    spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shamus");
+    // Spin right carousel to Shandy
+    spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shira");
+  });
+}
+
+const preset3Btn = document.getElementById('preset-3-btn');
+if (preset3Btn) {
+  preset3Btn.addEventListener('click', () => {
+    // Spin left carousel to Sharky
+    spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shawn");
+    // Spin right carousel to Shandy
+    spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shira");
+  });
+}
+
+const preset4Btn = document.getElementById('preset-4-btn');
+if (preset4Btn) {
+  preset4Btn.addEventListener('click', () => {
+    // Spin left carousel to Shamus
+    spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shawn");
+    // Spin right carousel to Shayla
+    spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shandy");
+  });
+}
+
+const preset5Btn = document.getElementById('preset-5-btn');
+if (preset5Btn) {
+  preset5Btn.addEventListener('click', () => {
+    // Spin left carousel to Shamus
+    spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Sharky");
+    // Spin right carousel to Shayla
+    spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shandy");
+  });
+}
+
+
+
+
+
   function isLethalEgg(lethal_alleles) {
     // If any allele is true for both chromosomes (i.e., true twice), it's lethal
-    // Here, since each egg only has one set, check if any allele is true in both parents
+    // Here, since each egg only has one set, check if any value is true in both parents
     // But since we store as a single object, check if any value is true for both inherited alleles
     // Actually, in our model, if any allele is true in the egg, it's lethal
     // But you want: if the egg has two of the same lethal allele (i.e., both inherited as true)
