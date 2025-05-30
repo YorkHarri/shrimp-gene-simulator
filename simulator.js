@@ -64,7 +64,7 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 
   // Generate lethal alleles
-  function generateLethalAlleles(num = 10, trueCount = 2) {
+  function generateLethalAlleles(num = 10, trueCount = 3) {
     const alleles = {};
     for (let i = 1; i <= num; i++) alleles[i] = false;
     // Randomly pick trueCount alleles to set to true
@@ -83,56 +83,135 @@ window.addEventListener("DOMContentLoaded", () => {
     const colorAlleles = ["R", "B", "g"];
     const saturationAlleles = ["l", "D"];
     const shrimpBase = [
-      // MALES
-      { 
-        id: 1, 
-        sex: "male", 
-        label: "Shamus", 
-        image: imagePaths.spottedMale, 
-        sex_phenotype: "male", 
-        sex_genotype: ["X", "Y"], 
-        pattern_genotype: ["S", "P"],
-        lethal_alleles: { "1": true, "2": true, "3": true, "4": false, "5": false, "6": false, "7": false, "8": false, "9": false, "10": false }
-      },
-      { id: 2, sex: "male", label: "Shane", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
-      { id: 3, sex: "male", label: "Shilo", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
-      { id: 4, sex: "male", label: "Shawn", image: imagePaths.plainMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["P", "P"] },
-      { id: 9, sex: "male", label: "Sharky", image: imagePaths.spottedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "P"] },
-      { id: 10, sex: "male", label: "Shelton", image: imagePaths.stripedMale, sex_phenotype: "male", sex_genotype: ["X", "Y"], pattern_genotype: ["S", "S"] },
-      // FEMALES
-      { id: 5, 
-        sex: "female", 
-        label: "Shira", 
-        image: imagePaths.plainFemale, 
-        sex_phenotype: "female", 
-        sex_genotype: ["X", "X"], 
-        pattern_genotype: ["P", "P"], 
-        lethal_alleles: { "1": true, "2": true, "3": true, "4": false, "5": false, "6": false, "7": false, "8": false, "9": false, "10": false }
-      },
-      { id: 6, sex: "female", label: "Shandy", image: imagePaths.plainFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["P", "P"] },
-      { id: 7, sex: "female", label: "Shayla", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] },
-      { id: 8, sex: "female", label: "Shelly", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
-      { id: 11, sex: "female", label: "Sherry", image: imagePaths.spottedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "P"] },
-      { id: 12, sex: "female", label: "Shannon", image: imagePaths.stripedFemale, sex_phenotype: "female", sex_genotype: ["X", "X"], pattern_genotype: ["S", "S"] }
-    ];
+    // MALES
+    { 
+      id: 1, //hidden recessive green
+      sex: "male", 
+      label: "Shamus", 
+      sex_phenotype: "male", 
+      sex_genotype: ["X", "Y"], 
+      pattern_genotype: ["S", "P"],
+      color_genotype: ["R", "g"],
+      saturation_genotype: ["D", "D"],
+      // lethal_alleles: { "1": true, "2": true, "3": true, "4": false, "5": false, "6": false, "7": false, "8": false, "9": false, "10": false }
+    },
+    { 
+      id: 2,
+      sex: "male",
+      label: "Shane",
+      sex_phenotype: "male",
+      sex_genotype: ["X", "Y"],
+      pattern_genotype: ["S", "S"]
+    },
+    { 
+      id: 3,
+      sex: "male",
+      label: "Shilo",
+      sex_phenotype: "male",
+      sex_genotype: ["X", "Y"],
+      pattern_genotype: ["P", "P"]
+    },
+    { 
+      id: 4,
+      sex: "male",
+      label: "Shawn",
+      sex_phenotype: "male",
+      sex_genotype: ["X", "Y"],
+      pattern_genotype: ["S", "P"]
+    },
+    { 
+      id: 5,
+      sex: "male",
+      label: "Sharky",
+      sex_phenotype: "male",
+      sex_genotype: ["X", "Y"],
+      pattern_genotype: ["S", "P"]
+    },
+    { 
+      id: 6,
+      sex: "male",
+      label: "Shelton",
+      sex_phenotype: "male",
+      sex_genotype: ["X", "Y"],
+      pattern_genotype: ["S", "P"]
+    },
+    // FEMALES
+    { 
+      id: 11, 
+      sex: "female", 
+      label: "Shira", 
+      sex_phenotype: "female", 
+      sex_genotype: ["X", "X"], 
+      pattern_genotype: ["S", "P"],
+      color_genotype: ["R", "B"],
+      saturation_genotype: ["D", "l"],
+      lethal_alleles: { "0": false, "2": false, "3": false, "4": false, "5": false, "6": false, "7": false, "8": true, "9": true, "10": true }
+    },
+    { 
+      id: 12, 
+      sex: "female", 
+      label: "Shandy", 
+      sex_phenotype: "female", 
+      sex_genotype: ["X", "X"], 
+      pattern_genotype: ["P", "P"]
+    },
+    { 
+      id: 13, 
+      sex: "female", 
+      label: "Shayla", 
+      sex_phenotype: "female", 
+      sex_genotype: ["X", "X"], 
+      pattern_genotype: ["S", "S"]
+    },
+    { 
+      id: 14, 
+      sex: "female", 
+      label: "Shelly", 
+      sex_phenotype: "female", 
+      sex_genotype: ["X", "X"], 
+      pattern_genotype: ["S", "P"]
+    },
+    { 
+      id: 15, 
+      sex: "female", 
+      label: "Sherry", 
+      sex_phenotype: "female", 
+      sex_genotype: ["X", "X"], 
+      pattern_genotype: ["S", "P"]
+    },
+    { 
+      id: 16, 
+      sex: "female", 
+      label: "Shannon", 
+      sex_phenotype: "female", 
+      sex_genotype: ["X", "X"], 
+      pattern_genotype: ["S", "S"]
+    }
+  ];
     return shrimpBase.map(shrimp => {
       const color_genotype = [getRandomAllele(colorAlleles), getRandomAllele(colorAlleles)];
       const saturation_genotype = [getRandomAllele(saturationAlleles), getRandomAllele(saturationAlleles)];
-
-      // Use lethal_alleles from shrimpBase if present, otherwise generate randomly
       const lethal_alleles = shrimp.lethal_alleles 
         ? { ...shrimp.lethal_alleles } 
         : generateLethalAlleles();
+      const pattern_genotype = shrimp.pattern_genotype;
+      const sex_genotype = shrimp.sex_genotype;
+
+      // Compute image based on pattern and sex genotype
+      const image = getShrimpImage(getPatternPhenotype(pattern_genotype), sex_genotype);
 
       return {
         ...shrimp,
         color_genotype,
         saturation_genotype,
+        pattern_genotype,
+        sex_genotype,
+        image, // always computed
         color_genotype_named: getNamedGenotype(color_genotype, 'color'),
         saturation_genotype_named: getNamedGenotype(saturation_genotype, 'saturation'),
-        pattern_genotype_named: getNamedGenotype(shrimp.pattern_genotype, 'pattern'),
-        type: getPatternPhenotype(shrimp.pattern_genotype),
-        pattern_phenotype: getPatternPhenotype(shrimp.pattern_genotype),
+        pattern_genotype_named: getNamedGenotype(pattern_genotype, 'pattern'),
+        type: getPatternPhenotype(pattern_genotype),
+        pattern_phenotype: getPatternPhenotype(pattern_genotype),
         color: getColorFromGenotype(color_genotype, saturation_genotype),
         lethal_alleles
       };
@@ -629,7 +708,7 @@ function getShrivelledEggBalloons(loci, isMale = false) {
   // Preset info text for each button
   const presetInfoTexts = {
     "preset-1-btn": "This preset loads unique recessive genes for each shrimp.<br><br>Genes are made by combining two alleles from each parent. If there is a dominant allele, the recessive allele will be hidden.<br>Despite the parents having alleles for green colouration and light saturation, notice how none of the offspring show these traits.<br><br>Unique alleles suggests there is high genetic diversity in the gene pool, meaning that recessive traits are hidden behind dominant alleles.",
-    "preset-2-btn": "This preset loads shared recessive genes between shrimp.<br><br>With these shrimp, there is a chance for the offspring to inherit the same recessive alleles from both parents, meaning that there are no dominant alleles to hide the recessive traits.<br><br>Shared alleles suggests that the individuals are closely related.",
+    "preset-2-btn": "This preset loads shared recessive genes between shrimp.<br><br>With these shrimp, there is a chance for the offspring to inherit the same recessive alleles from both parents, meaning that there are no dominant alleles to hide the recessive traits.<br><br>Shared alleles suggests that the individuals are related.<br>If you have blue eyes, both of your parents carry the recessive blue allele, so they're related to each other<br>(but this gene has had 6,000 years to spread, so it doesn't mean they're that closely related).",
     "preset-3-btn": "This preset loads unique lethal genes for each shrimp.<br><br>Both of the parents have lethal alleles hidden behind healthy alleles. However, because the alleles are found in totally different genes, there's no chance of the offspring inheriting two of the same lethal alleles, so will always appear healthy.<br><br>This is what happens in healthy gene pools, where there's enough genetic diversity to prevent recessive lethal alleles from being expressed.",
     "preset-4-btn": "This preset loads shared lethal genes between shrimp.<br><br>Both of the parents have lethal alleles hidden behind healthy alleles. However, because the alleles are found in the same genes, there's a chance of the offspring inheriting a pair of identical alleles, which means they lack a healthy allele in that gene.<br><br>This is what happens in unhealthy gene pools, where there's not enough genetic diversity to prevent recessive lethal alleles from being expressed."
   };
