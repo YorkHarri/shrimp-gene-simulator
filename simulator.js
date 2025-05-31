@@ -136,7 +136,8 @@ window.addEventListener("DOMContentLoaded", () => {
       label: "Shelton",
       sex_phenotype: "male",
       sex_genotype: ["X", "Y"],
-      pattern_genotype: ["S", "P"]
+      pattern_genotype: ["S", "P"],
+      lethal_alleles: { "1": false, "2": true, "3": false, "4": true, "5": false, "6": true, "7": false, "8": false, "9": false, "10": false }
     },
     // FEMALES
     { 
@@ -168,7 +169,7 @@ window.addEventListener("DOMContentLoaded", () => {
       sex_phenotype: "female", 
       sex_genotype: ["X", "X"], 
       pattern_genotype: ["S", "S"],
-      lethal_alleles: { "1": false, "2": true, "3": false, "4": true, "5": true, "6": false, "7": false, "8": false, "9": false, "10": false }
+      lethal_alleles: { "1": false, "2": true, "3": false, "4": true, "5": false, "6": true, "7": false, "8": false, "9": false, "10": false }
     },
     { 
       id: 14, 
