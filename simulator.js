@@ -740,9 +740,9 @@ function getShrivelledEggBalloons(loci, isMale = false) {
 
     "preset-3-btn": "This simulation is only looking at lethal genes, because it's very easy to see the effects.<br><br>In reality, the consequences of inbreeding come mainly from the accumulation of many bad recessive alleles, but not always as drastic as lethal genes.<br><br>Inbreeding depression leads to reduced fitness, fertility, and survival rates in populations.",
 
-    "preset-4-btn": "While lethal genes show up all the time, they rarely persist in a population for long.<br><br>So for them to be expressed, the population size must be very small.",
+    "preset-4-btn": "While lethal genes show up all the time, they rarely persist in a population for long.<br><br>So for them to be expressed, the population size must be very small.<br><br>If half the population has reduced fertility, then the 'effective population size' is much smaller than the actual population size.",
 
-    "preset-5-btn": "No matter how inbred, it only takes a single generation to reverse everything and suppress all lethal genes.<br><br>On a population level, this means you can restore a population's health by introducing even just a little bit of genetic diversity.",
+    "preset-5-btn": "No matter how inbred, it only takes a single generation to reverse everything and suppress all lethal genes.<br><br>On a population level, this means you can restore a population's health by introducing even just a little bit of genetic diversity.<br><br>Introgression is the process of introducing new genetic material from one population into another.<br>It happens in nature all the time, but it can also be used in conservation populations suffering from inbreeding depression.",
   };
 
   // Add event listeners to preset buttons to update the info box
