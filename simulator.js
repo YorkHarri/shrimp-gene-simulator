@@ -861,6 +861,8 @@ function spinCarouselToLabel(carouselObj, boxContent, label, onDone) {
   if (presetCoverOverlay) {
     presetCoverOverlay.addEventListener('click', () => {
       presetCoverOverlay.style.display = 'none';
+      // Show the egg matrix/grid again when cover is dismissed
+      showEggBatchGrid(true);
     });
   }
 
@@ -868,6 +870,8 @@ function spinCarouselToLabel(carouselObj, boxContent, label, onDone) {
     if (presetCoverOverlay && presetCoverImg) {
       presetCoverImg.src = `images/preset_${num}_cover.png`;
       presetCoverOverlay.style.display = 'flex';
+      // Hide the egg matrix/grid when cover is shown
+      showEggBatchGrid(false);
     }
   }
 const preset1Btn = document.getElementById('preset-1-btn');
