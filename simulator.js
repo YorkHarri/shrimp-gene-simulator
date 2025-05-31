@@ -111,7 +111,10 @@ window.addEventListener("DOMContentLoaded", () => {
       label: "Shilo",
       sex_phenotype: "male",
       sex_genotype: ["X", "Y"],
-      pattern_genotype: ["P", "P"]
+      pattern_genotype: ["P", "P"],
+      color_genotype: ["B", "B"],
+      saturation_genotype: ["l", "l"],
+      lethal_alleles: { "1": false, "2": false, "3": true, "4": false, "5": true, "6": false, "7": false, "8": true, "9": false, "10": false }
     },
     { 
       id: 4,
@@ -127,7 +130,9 @@ window.addEventListener("DOMContentLoaded", () => {
       label: "Sharky",
       sex_phenotype: "male",
       sex_genotype: ["X", "Y"],
-      pattern_genotype: ["S", "P"],
+      pattern_genotype: ["S", "S"],
+      color_genotype: ["g","g"],
+      saturation_genotype: ["l", "l"],
       lethal_alleles: { "1": true, "2": false, "3": true, "4": false, "5": true, "6": false, "7": false, "8": false, "9": false, "10": false }
     },
     { 
@@ -136,7 +141,9 @@ window.addEventListener("DOMContentLoaded", () => {
       label: "Shelton",
       sex_phenotype: "male",
       sex_genotype: ["X", "Y"],
-      pattern_genotype: ["S", "P"],
+      pattern_genotype: ["S", "S"],
+      color_genotype: ["g","g"],
+      saturation_genotype: ["l", "l"],
       lethal_alleles: { "1": false, "2": true, "3": false, "4": true, "5": false, "6": true, "7": false, "8": false, "9": false, "10": false }
     },
     // FEMALES
@@ -160,7 +167,7 @@ window.addEventListener("DOMContentLoaded", () => {
       pattern_genotype: ["P", "P"],
       color_genotype: ["R", "g"],
       saturation_genotype: ["D", "l"],
-      lethal_alleles: { "1": true, "2": false, "3": true, "4": false, "5": true, "6": false, "7": false, "8": false, "9": false, "10": false }
+      lethal_alleles: { "1": false, "2": true, "3": false, "4": true, "5": false, "6": true, "7": false, "8": false, "9": false, "10": false }
     },
     { 
       id: 13, 
@@ -168,8 +175,10 @@ window.addEventListener("DOMContentLoaded", () => {
       label: "Shayla", 
       sex_phenotype: "female", 
       sex_genotype: ["X", "X"], 
-      pattern_genotype: ["S", "S"],
-      lethal_alleles: { "1": false, "2": true, "3": false, "4": true, "5": false, "6": true, "7": false, "8": false, "9": false, "10": false }
+      pattern_genotype: ["P", "S"],
+      color_genotype: ["R", "g"],
+      saturation_genotype: ["l", "l"],
+      lethal_alleles: { "1": true, "2": false, "3": true, "4": false, "5": true, "6": false, "7": false, "8": false, "9": false, "10": false }
     },
     { 
       id: 14, 
@@ -192,8 +201,11 @@ window.addEventListener("DOMContentLoaded", () => {
       sex: "female", 
       label: "Shannon", 
       sex_phenotype: "female", 
-      sex_genotype: ["X", "X"], 
-      pattern_genotype: ["S", "S"]
+      sex_genotype: ["X", "X"],
+      pattern_genotype: ["S", "S"],
+      color_genotype: ["R", "R"],
+      saturation_genotype: ["D", "D"],
+      lethal_alleles: { "1": false, "2": false, "3": false, "4": false, "5": true, "6": false, "7": true, "8": true, "9": false, "10": false }
     }
   ];
     return shrimpBase.map(shrimp => {
@@ -679,7 +691,10 @@ function getShrivelledEggBalloons(loci, isMale = false) {
 
   // Event listeners
   document.querySelectorAll('.list').forEach(list => {
-    list.addEventListener('click', () => setTimeout(updateEgg, 10));
+    list.addEventListener('pointerdown', () => {
+      setPresetButtonsEnabled(true, null); // Enable all preset buttons
+      clearPresetInfoBox();                // Hide preset info text
+    });
   });
 
   if (bigBatchBtn) {
@@ -719,10 +734,15 @@ function getShrivelledEggBalloons(loci, isMale = false) {
 
   // Preset info text for each button
   const presetInfoTexts = {
-    "preset-1-btn": "This preset loads unique recessive genes for each shrimp.<br><br>Genes are made by combining two alleles from each parent. If there is a dominant allele, the recessive allele will be hidden.<br>Despite the parents having alleles for green colouration and light saturation, notice how none of the offspring show these traits.<br><br>Unique alleles suggests there is high genetic diversity in the gene pool, meaning that recessive traits are hidden behind dominant alleles.",
-    "preset-2-btn": "This preset loads shared recessive genes between shrimp.<br><br>With these shrimp, there is a chance for the offspring to inherit the same recessive alleles from both parents, meaning that there are no dominant alleles to hide the recessive traits.<br><br>Shared alleles suggests that the individuals are related.<br>If you have blue eyes, both of your parents carry the recessive blue allele, so they're related to each other<br>(but this gene has had 6,000 years to spread, so it doesn't mean they're that closely related).",
-    "preset-3-btn": "This preset loads unique lethal genes for each shrimp.<br><br>Both of the parents have lethal alleles hidden behind healthy alleles. However, because the alleles are found in totally different genes, there's no chance of the offspring inheriting two of the same lethal alleles, so will always appear healthy.<br><br>This is what happens in healthy gene pools, where there's enough genetic diversity to prevent recessive lethal alleles from being expressed.",
-    "preset-4-btn": "This preset loads shared lethal genes between shrimp.<br><br>Both of the parents have lethal alleles hidden behind healthy alleles. However, because the alleles are found in the same genes, there's a chance of the offspring inheriting a pair of identical alleles, which means they lack a healthy allele in that gene.<br><br>This is what happens in unhealthy gene pools, where there's not enough genetic diversity to prevent recessive lethal alleles from being expressed."
+    "preset-1-btn": "Despite having a green allele, none of Shamus's offspring will be green, because all the offspring with a green allele will also have a RED or a BLUE allele, which are dominant over green.<br><br>If two alleles have the same dominance, this is 'co-dominance'. In the case of BLUE and RED, they're both expressed equally, and so the phenotype is brown.",
+
+    "preset-2-btn": "With these shrimp, the previously hidden green alleles and previously hidden light alleles have a chance to be expressed in the offspring",
+
+    "preset-3-btn": "This simulation is only looking at lethal genes, because it's very easy to see the effects.<br><br>In reality, the consequences of inbreeding come mainly from the accumulation of many bad recessive alleles, but not always as drastic as lethal genes.<br><br>Inbreeding depression leads to reduced fitness, fertility, and survival rates in populations.",
+
+    "preset-4-btn": "While lethal genes show up all the time, they rarely persist in a population for long.<br><br>So for them to be expressed, the population size must be very small.",
+
+    "preset-5-btn": "No matter how inbred, it only takes a single generation to reverse everything and suppress all lethal genes.<br><br>On a population level, this means you can restore a population's health by introducing even just a little bit of genetic diversity.",
   };
 
   // Add event listeners to preset buttons to update the info box
@@ -732,21 +752,26 @@ function getShrivelledEggBalloons(loci, isMale = false) {
       btn.addEventListener('click', () => {
         const infoBox = document.getElementById('preset-info-box');
         if (infoBox) {
-          infoBox.querySelector('div').innerHTML = presetInfoTexts[btnId]; // Use innerHTML for <br>
+          infoBox.innerHTML = presetInfoTexts[btnId]; // Use innerHTML for <br>
         }
       });
     }
   });
 
   // Helper to spin carousel to a shrimp with a given label
-function spinCarouselToLabel(carouselObj, boxContent, label) {
-  // The "act" box is always at index 2 (for 5 boxes)
+function spinCarouselToLabel(carouselObj, boxContent, label, onDone) {
+  if (carouselObj.spinning) return;
+  carouselObj.spinning = true;
+
   const ACT_IDX = 2;
   const boxes = carouselObj.currentBoxContent;
   const targetIdx = boxes.findIndex(c => c.content.includes(`>${label}<`));
-  if (targetIdx === -1) return; // Not found
+  if (targetIdx === -1) {
+    carouselObj.spinning = false;
+    if (onDone) onDone();
+    return;
+  }
 
-  // Calculate how many next() calls to bring targetIdx to ACT_IDX
   const total = boxes.length;
   let spins = (targetIdx - ACT_IDX + total) % total;
 
@@ -755,6 +780,9 @@ function spinCarouselToLabel(carouselObj, boxContent, label) {
       carouselObj.next();
       spins--;
       setTimeout(spinStep, 200);
+    } else {
+      carouselObj.spinning = false;
+      if (onDone) onDone();
     }
   }
   spinStep();
@@ -766,14 +794,7 @@ function spinCarouselToLabel(carouselObj, boxContent, label) {
 
   function isLethalEgg(lethal_alleles) {
     // If any allele is true for both chromosomes (i.e., true twice), it's lethal
-    // Here, since each egg only has one set, check if any value is true in both parents
-    // But since we store as a single object, check if any value is true for both inherited alleles
-    // Actually, in our model, if any allele is true in the egg, it's lethal
-    // But you want: if the egg has two of the same lethal allele (i.e., both inherited as true)
-    // So, we need to track both alleles per locus. Let's update mixGenes and this function accordingly
-
-    // Instead, let's store lethal_alleles as { "1": [bool, bool], ... }
-    // Update mixGenes accordingly
+    // Here, since we only have one set per egg, we just check if any value is true
     for (let i = 1; i <= 10; i++) {
       const key = String(i);
       if (lethal_alleles[key][0] && lethal_alleles[key][1]) return true;
@@ -849,50 +870,113 @@ function spinCarouselToLabel(carouselObj, boxContent, label) {
       presetCoverOverlay.style.display = 'flex';
     }
   }
+const preset1Btn = document.getElementById('preset-1-btn');
+if (preset1Btn) {
+  preset1Btn.addEventListener('click', () => {
+    setPresetButtonsEnabled(false);
+    showPresetCover(1);
+    let spinsLeft = 2;
+    function done() {
+      spinsLeft--;
+      if (spinsLeft === 0) setPresetButtonsEnabled(true, 1);
+    }
+    spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shelton", done);
+    spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shannon", done);
+  });
+}
 
-  // Show overlay when preset buttons are clicked
-  const preset1Btn = document.getElementById('preset-1-btn');
-  if (preset1Btn) {
-    preset1Btn.addEventListener('click', () => {
-      showPresetCover(1);
-      spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shelton");
-      spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shannon");
-    });
+const preset2Btn = document.getElementById('preset-2-btn');
+if (preset2Btn) {
+  preset2Btn.addEventListener('click', () => {
+    setPresetButtonsEnabled(false);
+    showPresetCover(2);
+    let spinsLeft = 2;
+    function done() {
+      spinsLeft--;
+      if (spinsLeft === 0) setPresetButtonsEnabled(true, 2);
+    }
+    spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shamus", done);
+    spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shira", done);
+  });
+}
+
+const preset3Btn = document.getElementById('preset-3-btn');
+if (preset3Btn) {
+  preset3Btn.addEventListener('click', () => {
+    setPresetButtonsEnabled(false);
+    showPresetCover(3);
+    let spinsLeft = 2;
+    function done() {
+      spinsLeft--;
+      if (spinsLeft === 0) setPresetButtonsEnabled(true, 3);
+    }
+    spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shawn", done);
+    spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shira", done);
+  });
+}
+
+const preset4Btn = document.getElementById('preset-4-btn');
+if (preset4Btn) {
+  preset4Btn.addEventListener('click', () => {
+    setPresetButtonsEnabled(false);
+    showPresetCover(4);
+    let spinsLeft = 2;
+    function done() {
+      spinsLeft--;
+      if (spinsLeft === 0) setPresetButtonsEnabled(true, 4);
+    }
+    spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shawn", done);
+    spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shandy", done);
+  });
+}
+
+const preset5Btn = document.getElementById('preset-5-btn');
+if (preset5Btn) {
+  preset5Btn.addEventListener('click', () => {
+    setPresetButtonsEnabled(false);
+    showPresetCover(5);
+    let spinsLeft = 2;
+    function done() {
+      spinsLeft--;
+      if (spinsLeft === 0) setPresetButtonsEnabled(true, 5);
+    }
+    spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Sharky", done);
+    spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shandy", done);
+  });
+}
+
+  function setPresetButtonsEnabled(enabled, activeIndex = null) {
+    for (let i = 1; i <= 5; i++) {
+      const btn = document.getElementById(`preset-${i}-btn`);
+      if (btn) {
+        if (activeIndex === i) {
+          btn.disabled = true;
+          btn.style.opacity = "0.5";
+          btn.style.pointerEvents = "none";
+          btn.style.filter = "grayscale(1)";
+        } else {
+          btn.disabled = !enabled;
+          btn.style.opacity = enabled ? "1" : "0.5";
+          btn.style.pointerEvents = enabled ? "auto" : "none";
+          btn.style.filter = enabled ? "" : "grayscale(1)";
+        }
+      }
+    }
   }
 
-  const preset2Btn = document.getElementById('preset-2-btn');
-  if (preset2Btn) {
-    preset2Btn.addEventListener('click', () => {
-      showPresetCover(2);
-      spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shamus");
-      spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shira");
-    });
+  // Helper to clear the preset info box
+  function clearPresetInfoBox() {
+    const infoBox = document.getElementById('preset-info-box');
+    if (infoBox) {
+      infoBox.innerHTML = ""; // or infoBox.style.display = "none";
+    }
   }
 
-  const preset3Btn = document.getElementById('preset-3-btn');
-  if (preset3Btn) {
-    preset3Btn.addEventListener('click', () => {
-      showPresetCover(3);
-      spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shawn");
-      spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shira");
+  // Listen for carousel movement to re-enable all preset buttons and hide info
+  document.querySelectorAll('.list').forEach(list => {
+    list.addEventListener('pointerdown', () => {
+      setPresetButtonsEnabled(true, null); // Enable all preset buttons
+      clearPresetInfoBox();                // Hide preset info text
     });
-  }
-
-  const preset4Btn = document.getElementById('preset-4-btn');
-  if (preset4Btn) {
-    preset4Btn.addEventListener('click', () => {
-      showPresetCover(4);
-      spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shawn");
-      spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shandy");
-    });
-  }
-
-  const preset5Btn = document.getElementById('preset-5-btn');
-  if (preset5Btn) {
-    preset5Btn.addEventListener('click', () => {
-      showPresetCover(5);
-      spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Sharky");
-      spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shandy");
-    });
-  }
+  });
 });
