@@ -760,57 +760,6 @@ function spinCarouselToLabel(carouselObj, boxContent, label) {
   spinStep();
 }
 
-// After presetInfoTexts and event listeners for preset buttons
-const preset1Btn = document.getElementById('preset-1-btn');
-if (preset1Btn) {
-  preset1Btn.addEventListener('click', () => {
-    // Spin left carousel to Shamus
-    spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shelton"); //not actually what I wanted, but by going one to the left, the one in the middle is Shamus
-    // Spin right carousel to Shira
-    spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shannon");
-  });
-}
-
-const preset2Btn = document.getElementById('preset-2-btn');
-if (preset2Btn) {
-  preset2Btn.addEventListener('click', () => {
-    // Spin left carousel to Shane
-    spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shamus");
-    // Spin right carousel to Shandy
-    spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shira");
-  });
-}
-
-const preset3Btn = document.getElementById('preset-3-btn');
-if (preset3Btn) {
-  preset3Btn.addEventListener('click', () => {
-    // Spin left carousel to Sharky
-    spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shawn");
-    // Spin right carousel to Shandy
-    spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shira");
-  });
-}
-
-const preset4Btn = document.getElementById('preset-4-btn');
-if (preset4Btn) {
-  preset4Btn.addEventListener('click', () => {
-    // Spin left carousel to Shamus
-    spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shawn");
-    // Spin right carousel to Shayla
-    spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shandy");
-  });
-}
-
-const preset5Btn = document.getElementById('preset-5-btn');
-if (preset5Btn) {
-  preset5Btn.addEventListener('click', () => {
-    // Spin left carousel to Shamus
-    spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Sharky");
-    // Spin right carousel to Shayla
-    spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shandy");
-  });
-}
-
 
 
 
@@ -883,5 +832,67 @@ if (preset5Btn) {
       }
     }
     return loci;
+  }
+
+  // Overlay logic for preset cover
+  const presetCoverOverlay = document.getElementById('preset-cover-overlay');
+  const presetCoverImg = document.getElementById('preset-cover-img');
+  if (presetCoverOverlay) {
+    presetCoverOverlay.addEventListener('click', () => {
+      presetCoverOverlay.style.display = 'none';
+    });
+  }
+
+  function showPresetCover(num) {
+    if (presetCoverOverlay && presetCoverImg) {
+      presetCoverImg.src = `images/preset_${num}_cover.png`;
+      presetCoverOverlay.style.display = 'flex';
+    }
+  }
+
+  // Show overlay when preset buttons are clicked
+  const preset1Btn = document.getElementById('preset-1-btn');
+  if (preset1Btn) {
+    preset1Btn.addEventListener('click', () => {
+      showPresetCover(1);
+      spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shelton");
+      spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shannon");
+    });
+  }
+
+  const preset2Btn = document.getElementById('preset-2-btn');
+  if (preset2Btn) {
+    preset2Btn.addEventListener('click', () => {
+      showPresetCover(2);
+      spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shamus");
+      spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shira");
+    });
+  }
+
+  const preset3Btn = document.getElementById('preset-3-btn');
+  if (preset3Btn) {
+    preset3Btn.addEventListener('click', () => {
+      showPresetCover(3);
+      spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shawn");
+      spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shira");
+    });
+  }
+
+  const preset4Btn = document.getElementById('preset-4-btn');
+  if (preset4Btn) {
+    preset4Btn.addEventListener('click', () => {
+      showPresetCover(4);
+      spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Shawn");
+      spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shandy");
+    });
+  }
+
+  const preset5Btn = document.getElementById('preset-5-btn');
+  if (preset5Btn) {
+    preset5Btn.addEventListener('click', () => {
+      showPresetCover(5);
+      spinCarouselToLabel(leftCarouselObj, leftBoxContent, "Sharky");
+      spinCarouselToLabel(rightCarouselObj, rightBoxContent, "Shandy");
+    });
   }
 });

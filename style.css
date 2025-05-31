@@ -293,3 +293,21 @@
     overflow-x: auto;
     overflow-y: auto; /* Allow vertical scrolling if needed */
   }
+  #preset-cover-overlay {
+    display: none;
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: 320px;
+    background: rgba(0,0,0,0.0);
+    z-index: 9999;
+    justify-content: center;
+    align-items: flex-start;
+  }
+  #preset-cover-overlay img {
+    width: 100%;
+    height: auto;
+    pointer-events: auto;
+    cursor: pointer;
+    user-select: none;
+  }
