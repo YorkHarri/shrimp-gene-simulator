@@ -542,7 +542,7 @@ function getShrivelledEggBalloons(loci, isMale = false) {
   function showEggBatchGrid(show) {
     eggBatchGrid.style.display = show ? 'grid' : 'none';
     eggBatchGenotype.style.display = show ? 'block' : 'none';
-    eggContainer.style.display = show ? 'none' : 'block';
+    eggContainer.style.display = show ? 'none' : 'none'; // Hide the large egg when grid is hidden
   }
 
   function updateEggBatchGrid() {
