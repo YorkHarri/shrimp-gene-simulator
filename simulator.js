@@ -861,7 +861,8 @@ function spinCarouselToLabel(carouselObj, boxContent, label, onDone) {
   if (presetCoverOverlay) {
     presetCoverOverlay.addEventListener('click', () => {
       presetCoverOverlay.style.display = 'none';
-      // Show the egg matrix/grid again when cover is dismissed
+      // Update the egg matrix/grid before showing it again, so it's synced with the carousel
+      updateEggBatchGrid();
       showEggBatchGrid(true);
     });
   }
